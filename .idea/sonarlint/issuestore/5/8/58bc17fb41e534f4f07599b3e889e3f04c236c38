@@ -1,0 +1,34 @@
+
+z
+java:S2226"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(¶çùúÿÿÿÿ8×±‘“º.
+Q
+java:S1874"/Remove this use of "Integer"; it is deprecated.(ƒ’ƒÕüÿÿÿÿ8×±‘“º.
+…
+java:S19897"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8×±‘“º.
+…
+java:S1989"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8×±‘“º.
+
+java:S1989="dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(ıÑâŠ8×±‘“º.
+m
+java:S1989"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8×±‘“º.
+Y	java:S107é"<Method has 9 parameters, which is greater than 7 authorized.(—‰Şù8×±‘“º.
+K
+java:S1874'"/Remove this use of "Integer"; it is deprecated.(Ã“÷8×±‘“º.
+m
+java:S19899"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8×±‘“º.
+V
+java:S4719v"9Replace charset name argument with StandardCharsets.UTF_8(š­‘ª8×±‘“º.
+j
+java:S1192""MDefine a constant instead of duplicating this literal "driverinfoId" 3 times.(Öƒ8×±‘“º.
+u
+java:S2226"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(é¯×á8ÚŠü‘³.
+K
+java:S1874'"/Remove this use of "Integer"; it is deprecated.(Ã“÷8×±‘“º.
+
+java:S1989X"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(ıÑâŠ8×±‘“º.
+r
+java:S1192-"UDefine a constant instead of duplicating this literal "drivinglicenseNumber" 4 times.(‡ªß8•ˆ»“º.
+s
+java:S1128"QRemove this unused import 'org.springframework.web.bind.annotation.RequestParam'.(Â¬À·ùÿÿÿÿ8éÂñ”³.
+Q
+java:S1874"/Remove this use of "Integer"; it is deprecated.(ƒ’ƒÕüÿÿÿÿ8×±‘“º.

@@ -1,0 +1,26 @@
+
+X
+java:S1128"8Remove this unused import 'org.apache.ibatis.jdbc.Null'.(›ÂÔ‹ùÿÿÿÿ8ÂÁ‚¤Ã.
+`
+java:S1128"@Remove this unused import 'javax.servlet.annotation.WebServlet'.(™ì¢´þÿÿÿÿ8ÂÁ‚¤Ã.
+Q
+java:S1128"1Remove this unused import 'work.aijiu.VO.TreeVo'.(„€ÑÑýÿÿÿÿ8ÂÁ‚¤Ã.
+‡
+java:S1989"lHandle the following exception that could be thrown by "setCharacterEncoding": UnsupportedEncodingException.(±Œ©À8ÂÁ‚¤Ã.
+k
+java:S1989"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçÞ8ÂÁ‚¤Ã.
+S	java:S106"9Replace this use of System.out or System.err by a logger.(Œ¹¶æ8ÂÁ‚¤Ã.
+m
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(üª¼í8ÂÁ‚¤Ã.
+ƒ
+java:S1989"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8ÂÁ‚¤Ã.
+k
+java:S1989"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçÞ8ÂÁ‚¤Ã.
+„
+java:S1989"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(¥¨Áéÿÿÿÿÿ8ÂÁ‚¤Ã.
+„
+java:S1989"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(¥¨Áéÿÿÿÿÿ8ÂÁ‚¤Ã.
+„
+java:S1989"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(¥¨Áéÿÿÿÿÿ8ÂÁ‚¤Ã.
+„
+java:S1989"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(¥¨Áéÿÿÿÿÿ8ÂÁ‚¤Ã.

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="work.aijiu.dao.TDepartDao">
+
+    <resultMap type="work.aijiu.entity.TDepart" id="TDepartMap">
+        <result property="departId" column="DEPART_ID" jdbcType="INTEGER"/>
+        <result property="departName" column="DEPART_NAME" jdbcType="VARCHAR"/>
+        <result property="pid" column="PID" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TDepartMap">
+        select
+          DEPART_ID, DEPART_NAME, PID
+        from carm.t_depart
+        where DEPART_ID = #{departId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TDepartMap">
+        select
+          DEPART_ID, DEPART_NAME, PID
+        from carm.t_depart
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TDepartMap">
+        select
+          DEPART_ID, DEPART_NAME, PID
+        from carm.t_depart
+        <where>
+            <if test="departId != null">
+                and DEPART_ID = #{departId}
+            </if>
+            <if test="departName != null and departName != ''">
+                and DEPART_NAME = #{departName}
+            </if>
+            <if test="pid != null">
+                and PID = #{pid}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="departId" useGeneratedKeys="true">
+        insert into carm.t_depart(DEPART_NAME, PID)
+        values (#{departName}, #{pid})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update carm.t_depart
+        <set>
+            <if test="departName != null and departName != ''">
+                DEPART_NAME = #{departName},
+            </if>
+            <if test="pid != null">
+                PID = #{pid},
+            </if>
+        </set>
+        where DEPART_ID = #{departId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from carm.t_depart
+        where
+        DEPART_ID = #{departId}
+            and
+        (SELECT count(*) from (select t.* from t_depart t)  a where a.PID = #{departId} )= 0;
+    </delete>
+</mapper>

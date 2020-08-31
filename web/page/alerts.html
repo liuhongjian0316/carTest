@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>消息通知</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+    <style>
+        .demo-input{padding-left: 10px; height: 38px; min-width: 200px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+    </style>
+</head>
+<body>
+<table class="layui-hide" id="demo" lay-filter="test" lay-data="test"></table>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="titleTpl">
+    {{#  if(d.approverState == 2){ }}
+    <a class="layui-btn layui-btn-xs">已审批</a>
+    {{#  } else if(d.approverState == 3){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">已驳回</a>
+    {{#  } }}
+</script>
+<script type="text/html" id="titleTpl2">
+    {{#  if(d.isRead == 0){ }}
+    <a class="layui-btn layui-btn-xs">未阅读</a>
+    {{#  } else if(d.isRead == 1){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">已阅读</a>
+    {{#  } }}
+</script>
+
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script th:inline="none">
+    layui.config({
+        version: '1584613945932' //为了更新 js 缓存，可忽略
+    });
+
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function(){
+        var laydate = layui.laydate //日期
+            ,laypage = layui.laypage //分页
+            ,layer = layui.layer //弹层
+            ,form = layui.form //表格
+            ,table = layui.table //表格
+            ,carousel = layui.carousel //轮播
+            ,upload = layui.upload //上传
+            ,element = layui.element //元素操作
+            ,slider = layui.slider //滑块
+        var session_name = null;
+        var session_id = null;
+        var session_departmentid = null;
+        var session_tel = null;
+        //获取sesson
+        $.ajax({
+            url: '/car/user/getsesson',
+            dataType: 'json',
+            type: 'get',
+            contentType:'json',
+            async: false,
+            success: function (data) {
+                session_name = data[0].userName;
+                session_id = data[0].userinfoid;
+                session_departmentid = data[0].departName;
+                session_tel = data[0].tel;
+
+                //执行一个 table 实例
+                table.render({
+                    elem: '#demo'
+                    ,height: 420
+                    ,url: '/car/approver/alertsData?applicationName='+ data[0].userName//数据接口
+                    ,title: '申请表'
+                    ,page: true //开启分页
+                    ,limits:[5,10,15,20]
+                    ,cols: [[ //表头
+                        {type: 'checkbox', fixed: 'left'}
+                        ,{field: 'applicationid', title: 'ID', width:100, sort: true, fixed: 'left', totalRowText: '合计：'}
+                        ,{field: 'destinationTime', title: '申请时间', width:200, sort: true, fixed: 'left'}
+                        ,{field: 'approverTime', title: '审批时间', width:200, sort: true, fixed: 'left'}
+                        ,{field: 'approverState', title: '审批状态', width:200, sort: true, fixed: 'left',templet: '#titleTpl'}
+                        ,{field: 'isRead', title: '阅读状态', width:200, sort: true, fixed: 'left',templet: '#titleTpl2'}
+                        ,{fixed: 'right', title:'操作', width: 165, align:'center', toolbar: '#barDemo'}
+                    ]]
+                });
+                //监听行工具事件
+                table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                    var data = obj.data //获得当前行数据
+                        ,layEvent = obj.event; //获得 lay-event 对应的值
+                    //从后台获取表格数据
+                    $.ajax({
+                        type:'get',
+                        url:'/car/approver/untreatedDetail?applicationid='+data.applicationid,
+                        dataType:'json',
+                        contentType:'application/json',
+                        success:function (data) {
+                            if (data.status == "200"){
+                                //表格赋值
+                                form.val("formdata",{
+                                    applicationid:data.data[0].applicationid
+                                    ,departmentId:data.data[0].departmentId
+                                    ,applicationName:data.data[0].applicationName
+                                    ,tel:data.data[0].tel
+                                    ,leaveTime:data.data[0].leaveTime
+                                    ,returnTime:data.data[0].returnTime
+                                    ,destination:data.data[0].destination
+                                    ,reason:data.data[0].reason
+                                    ,approverComment:data.data[0].approverComment
+                                    ,destinationTime:data.data[0].destinationTime
+                                });
+                            }else{
+                            }
+                        },
+                        error:function () {
+                            layer.alert("您的网络不好，请稍后重试");
+                        }
+                    });
+
+                    if(layEvent === 'detail'){
+                        layer.msg('查看');
+                        //未读变已读
+                        $.ajax({
+                            type:'get',
+                            url:'/car/approver/read?applicationid='+data.applicationid,
+                            dataType:'json',
+                            contentType:'application/json',
+                            success:function (data) {
+                                if (data.status == "200"){
+                                    layer.msg("已阅读");
+                                }else{
+                                }
+                            },
+                            error:function () {
+                                layer.alert("您的网络不好，请稍后重试");
+                            }
+                        });
+                        layer.open({
+                            type: 1,
+                            closeBtn: 2,
+                            offset: '0px',
+                            area: ['826px','600px'],
+                            shade: 0.8,
+                            id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                            btnAlign: 'r',
+                            moveType: 1, //拖拽模式，0或者1
+                            content:$('.detailPage'),
+                        });
+                        table.reload('demo', {
+                            url: '/car/approver/alertsData'
+                            ,where: {} //设定异步数据接口的额外参数
+                        });
+                    } else if(layEvent === 'del'){
+                        var loginLoadIndex = layer.load(2);
+                        layer.msg('删除');
+                        $.ajax({
+                            type:'get',
+                            url:'/car/approver/delApp?approverState='+4+"&applicationid="+data.applicationid,
+                            dataType:'json',
+                            data:JSON.stringify(data.field),
+                            contentType:'application/json',
+                            success:function (data) {
+                                layer.close(loginLoadIndex);
+                                if (data.status == "200"){
+                                    layer.close(loginLoadIndex);
+                                    layer.msg('删除成功');
+                                    table.reload('demo', {
+                                        url: '/car/approver/treateDate'
+                                        ,where: {} //设定异步数据接口的额外参数
+                                    });
+                                }else{
+                                    layer.close(loginLoadIndex);
+                                    layer.alert("删除失败");
+                                }
+                            },
+                            error:function () {
+                                layer.close(loginLoadIndex);
+                                layer.alert("网络不佳，请稍后重试");
+                            }
+                        });
+                    }
+                });
+
+            }
+        });
+        var ws;
+        //避免重复连接
+        var lockReconnect = false;
+        var wsUrl = "ws://localhost:8888/car/websocket";
+        createWebSocket(wsUrl);
+        function createWebSocket(url) {
+            try {
+                ws = new WebSocket(url);
+                initEventHandle();
+            } catch (e) {
+                //重新连接
+                reconnect(url);
+            }
+        }
+
+        window.initEventHandle = function(){
+            ws.onclose = function () {
+                console.info("连接关闭");
+                reconnect(wsUrl);
+            };
+            ws.onerror = function () {
+                console.info("传输异常");
+                reconnect(wsUrl);
+            };
+            ws.onopen = function () {
+                //心跳检测重置
+                heartCheck.reset().start();
+            };
+
+            ws.onmessage = function(event) {
+                console.info(event.data);
+                if(event.data=="3"){
+                    layer.alert("有新的消息反馈",function (index) {
+                        layer.close(index);
+                        location.reload();
+                    });
+                }
+                //如果获取到消息，心跳检测重置
+                heartCheck.reset().start();
+            }
+        }
+        function reconnect(url) {
+            if(lockReconnect) return;
+            lockReconnect = true;
+            //没连接上会一直重连，设置延迟避免请求过多
+            setTimeout(function () {
+                createWebSocket(url);
+                lockReconnect = false;
+            }, 5000);
+        }
+        //心跳检测,每5s心跳一次
+        var heartCheck = {
+            timeout: 5000,
+            timeoutObj: null,
+            serverTimeoutObj: null,
+            reset: function(){
+                clearTimeout(this.timeoutObj);
+                clearTimeout(this.serverTimeoutObj);
+                return this;
+            },
+            start: function(){
+                var self = this;
+                this.timeoutObj = setTimeout(function(){
+                    //这里发送一个心跳，后端收到后，返回一个心跳消息，
+                    //onmessage拿到返回的心跳就说明连接正常
+                    self.serverTimeoutObj = setTimeout(function(){
+                        //如果超过一定时间还没重置，说明后端主动断开了
+
+                        ws.close();
+                        //如果onclose会执行reconnect，我们执行ws.close()就行了.
+                        //如果直接执行reconnect 会触发onclose导致重连两次
+                    }, self.timeout)
+                }, this.timeout)
+            }
+        }
+
+    });
+</script>
+
+<!--查看详细信息表单-->
+<div class="detailPage" style="display: none">
+    <form class="layui-form"  lay-filter="formdata">
+        <input type="hidden" name="applicationid" readonly="readonly">
+        <input type="hidden" name="departmentId" readonly="readonly">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请人姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="applicationName" required  lay-verify="required" placeholder="请输入申请人姓名" autocomplete="off" class="layui-input"  readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系电话</label>
+            <div class="layui-input-block">
+                <input type="text" name="tel" required  lay-verify="phone|required" placeholder="请输入联系电话" autocomplete="off" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请出车时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="leaveTime" lay-verify="required" class="demo-input" placeholder="请选择时间" id="leaveTime" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">预计返回时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="returnTime" lay-verify="required" class="demo-input" placeholder="请选择时间" id="returnTime" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">目的地</label>
+            <div class="layui-input-block">
+                <input type="text" name="destination" required  lay-verify="required" placeholder="请输入目的地" autocomplete="off" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用车原因</label>
+            <div class="layui-input-block">
+                <textarea type="text" name="reason" required  lay-verify="required" placeholder="请输入用车原因" autocomplete="off" class="layui-textarea" readonly="readonly"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请时间</label>
+            <div class="layui-input-block">
+                <textarea type="text" name="destinationTime" required  lay-verify="required" placeholder="请输入用车原因" autocomplete="off" class="layui-textarea" readonly="readonly"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea name="approverComment" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="work.aijiu.dao.ModelDao">
+    <select id="selectDate" resultType="java.util.Map">
+        select c.BRAND_MODEL name, count(c.PLATE_NUMBER) number
+        from t_carinfo  c,t_model m
+        where c.BRAND_MODEL = m.name GROUP BY c.BRAND_MODEL
+    </select>
+</mapper>

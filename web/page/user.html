@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户信息</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;max-height: 100%">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-search">筛选搜索</i>
+        </div>
+        <form class="layui-form" action="" id="searchformdate">
+            <div class="layui-row">
+                <div class="layui-col-md3">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">账号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="userAccount" placeholder="请输入账号" autocomplete="off" class="layui-input" id="userAccount3">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">手机号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="tel" placeholder="请输入手机号" autocomplete="off" class="layui-input" id="tel3">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="layui-form-item"  >
+                        <label class="layui-form-label">部门</label>
+                        <div class="layui-input-block">
+                            <select name="departName" id="departName3" lay-search>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="position: absolute;right: 25px;top:20px">
+                <div class="layui-input-block">
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <a class="layui-btn layui-btn-normal"  data-type="reload" lay-filter="serachformDemo" id="search">查询结果</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs">数据列表</i> <i style="float: right"><a class="layui-btn layui-btn-normal" id="addBtn">添加</a></i>
+        </div>
+    </div>
+    <div class="layui-card">
+        <table class="layui-hide" id="demo" lay-filter="test"></table>
+    </div>
+</div>
+
+<script type="text/html" id="barDemo">
+    {{#  if((d.roleid == 1 && d.userAccount == "admin")){ }}
+
+    {{#  }else{ }}
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    {{#  } }}
+
+</script>
+
+<script type="text/html" id="titleTpl">
+    {{#  if(d.sex == 0){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">男</a>
+    {{#  } else if(d.sex == 1){ }}
+    <a class="layui-btn layui-btn-xs">女</a>
+    {{#  }  }}
+</script>
+<script type="text/html" id="titleTpl2">
+    {{#  if(d.roleid == 1){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">超级管理员</a>
+    {{#  } else if(d.roleid == 2){ }}
+    <a class="layui-btn layui-btn-xs">普通用户</a>
+    {{#  } else{  }}
+    <a class="layui-btn layui-btn-warm layui-btn-xs">管理员</a>
+    {{#  }   }}
+</script>
+
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script th:inline="none">
+    layui.config({
+        version: '1584613945938' //为了更新 js 缓存，可忽略
+    });
+
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function(){
+        var laydate = layui.laydate //日期
+            ,laypage = layui.laypage //分页
+            ,layer = layui.layer //弹层
+            ,table = layui.table //表格
+            ,form = layui.form //表单
+            ,carousel = layui.carousel //轮播
+            ,upload = layui.upload //上传
+            ,element = layui.element //元素操作
+            ,slider = layui.slider //滑块
+        var oldaccount = null;
+        //下拉框初始化(部门)
+        $.ajax({
+            url: '/car/depart/pidName',
+            dataType: 'json',
+            type: 'post',
+            contentType:'application/json',
+            success: function (data) {
+                $.each(data.data, function (index, item) {
+                    $('#departName').append(new Option(item.departName, item.departId));// 下拉菜单里添加元素
+                    $('#departName2').append(new Option(item.departName, item.departId));// 下拉菜单里添加元素
+                    $('#departName3').append(new Option(item.departName, item.departId));// 下拉菜单里添加元素
+                });
+                layui.form.render("select");
+            }
+        })
+        //执行一个 table 实例
+        table.render({
+            elem: '#demo'
+            ,height: 420
+            ,url: '/car/user/userPage' //数据接口
+            ,title: '车辆信息表'
+            ,page: true //开启分页
+            ,totalRow: true //开启合计行
+            ,cols: [[ //表头
+                {field: 'userinfoid', title: 'ID', width:60, sort: true, fixed: 'left'}
+                ,{field: 'userAccount', title: '账号', width:100}
+                ,{field: 'userName', title: '姓名', width:100}
+                ,{field: 'pwd', title: '密码', width: 100, sort: true}
+                ,{field: 'sex', title: '性别', width:100, sort: true,templet: '#titleTpl'}
+                ,{field: 'tel', title: '手机', width: 100, sort: true}
+                ,{field: 'addr', title: '地址', width:120}
+                ,{field: 'departName', title: '部门', width: 120}
+                ,{field: 'roleid', title: '角色', width: 120,templet: '#titleTpl2'}
+                ,{fixed: 'right', title:'操作',width: 165, align:'center', toolbar: '#barDemo'}
+            ]]
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                ,layEvent = obj.event; //获得 lay-event 对应的值
+            if(layEvent === 'del'){
+                layer.confirm('真的删除这条数据吗', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构
+                    layer.close(index);
+                    var loginLoadIndex = layer.load(2);
+                    //向服务端发送删除指令
+                    $.ajax({
+                        type:'get',
+                        url:'/car/user/delUserById?userinfoid='+data.userinfoid,
+                        contentType:'application/json',
+                        dataType:'json',
+                        success:function (data) {
+                            if (data.status == "200") {
+                                layer.msg('删除成功');
+                                table.reload('demo', {
+                                    url: '/car/user/userPage'
+                                    ,where: {} //设定异步数据接口的额外参数
+                                });
+                                layer.closeAll();
+                            }else{
+                                layer.closeAll();
+                                layer.close(loginLoadIndex);
+                                layer.alert("删除失败");
+                            }
+                        },
+                        error:function () {
+                            layer.alert("网络不佳，数据获取不到");
+                            layer.closeAll();
+                        }
+                    });
+                });
+            } else if(layEvent === 'edit'){
+                //修改模态框赋值
+                $.ajax({
+                    type:'get',
+                    url:'/car/user/getUserById?userinfoid='+data.userinfoid,
+                    contentType:'application/json',
+                    dataType:'json',
+                    async: false,
+                    success:function (data) {
+                        //赋初始值
+                        form.val("editformdata",{
+                            "userinfoid":data.data[0].userinfoid
+                            ,"userAccount":data.data[0].userAccount
+                            ,"userName":data.data[0].userName
+                            ,"pwd":data.data[0].pwd
+                            ,"sex":data.data[0].sex
+                            ,"tel":data.data[0].tel
+                            ,"addr":data.data[0].addr
+                            ,"departName":data.data[0].departName
+                            ,"roleid":data.data[0].roleid
+                        });
+                        //将老账号传回后端
+                        oldaccount = data.data[0].userAccount
+                        $.ajax({
+                            type:'get',
+                            url:'/car/user/oldaccount?account='+oldaccount,
+                            dataType:'json',
+                            contentType:'application/json',
+                            success:function (data) {
+                            }
+                        });
+                    },
+                    error:function () {
+                        layer.alert("网络不佳，数据获取不到");
+                    }
+                });
+                //打开编辑模态框
+                layer.open({
+                    type: 1,
+                    title: '编辑信息', //不显示标题栏
+                    closeBtn: 2,
+                    offset: '10px',
+                    area: ['820px','585px'],
+                    shade: 0.8,
+                    id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                    btn: ['保存','取消'],
+                    btnAlign: 'r',
+                    moveType: 1, //拖拽模式，0或者1
+                    content:$('.editPage'),
+                    yes: function (index, layero) {
+                        //触发提交按钮
+                        layero.find('form').find('a[lay-submit]').click();
+                        //修改按钮触发
+                        form.on('submit(EditformDemo)', function(data){
+                            var loginLoadIndex = layer.load(2);
+                            $.ajax({
+                                type:'post',
+                                url:'/car/user/editUser',
+                                dataType:'json',
+                                data:JSON.stringify(data.field),
+                                contentType:'application/json',
+                                success:function (data) {
+                                    layer.close(loginLoadIndex);
+                                    if (data.status == "200"){
+                                        layer.msg('修改成功');
+                                        table.reload('demo', {
+                                            url: '/car/user/userPage'
+                                            ,where: {} //设定异步数据接口的额外参数
+                                        });
+                                        layer.closeAll();
+                                    }else{
+                                        layer.close(loginLoadIndex);
+                                        layer.alert("修改失败");
+                                        $('#loginBtn').val("立即提交");
+                                    }
+                                },
+                                error:function () {
+                                    layer.close(loginLoadIndex);
+                                    layer.alert("网络不佳，请稍后重试");
+                                    $('#formDemo').val("正在添加...");
+                                }
+                            });
+                        });
+                    },
+                });
+
+            }
+        });
+
+        //添加按钮点击
+        $(document).on('click','#addBtn',function(){
+            //打开添加模态框
+            layer.open({
+                type: 1,
+                title: '添加信息', //不显示标题栏
+                closeBtn: 2,
+                offset: '10px',
+                area: ['826px','600px'],
+                shade: 0.8,
+                id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                btn: ['保存', '重置','取消'],
+                btnAlign: 'r',
+                moveType: 1, //拖拽模式，0或者1
+                content:$('.addPage'),
+                yes: function (index, layero) {
+                    //触发提交按钮
+                    layero.find('form').find('a[lay-submit]').click();
+                    //添加按钮触发
+                    form.on('submit(AddformDemo)', function(data){
+                        var loginLoadIndex = layer.load(2);
+                        $.ajax({
+                            type:'post',
+                            url:'/car/user/addUser',
+                            dataType:'json',
+                            data:JSON.stringify(data.field),
+                            contentType:'application/json',
+                            success:function (data) {
+                                layer.close(loginLoadIndex);
+                                if (data.status == "200"){
+                                    layer.msg('添加成功');
+                                    table.reload('demo', {
+                                        url: '/car/user/userPage'
+                                        ,where: {} //设定异步数据接口的额外参数
+                                    });
+                                    layer.close(index);
+
+                                }else{
+                                    layer.close(loginLoadIndex);
+                                    layer.alert("添加失败");
+                                    $('#loginBtn').val("立即提交");
+                                }
+                            },
+                            error:function () {
+                                layer.close(loginLoadIndex);
+                                layer.alert("网络不佳，请稍后重试");
+                                $('#formDemo').val("正在添加...");
+                            }
+                        });
+                    });
+                },
+                btn2:function (index,layero) {
+                    //触发重置按钮
+                    layero.find('form').find('button').click();
+
+                    return false;
+                },
+                btn3:function (index,layero) {
+                    //取消
+                }
+            });
+        })
+        //自定义验证规则
+        form.verify({
+            checkAccount:function () {
+                var userAccount = $('#userAccount').val();
+                var flag = false;
+                $.ajax({
+                    type:'get',
+                    url:'/car/user/checkAccount?userAccount='+userAccount,
+                    dataType:'json',
+                    async: false,
+                    contentType:'application/json',
+                    success:function (data) {
+                        flag = data.data;
+                        if (data.data == true){
+                            $("#tishi").html("账号重复");
+                            $("#tishi").css({color:"red"});
+                        }else{
+                            $("#tishi").html("账号可用");
+                            $("#tishi").css({color:"green"});
+                        }
+                    }
+                });
+                if(flag){
+                    return "账号已存在";
+                }
+            },
+            checkAccountEdit:function () {
+                var userAccount = $('#userAccount2').val();
+                var flag = false;
+                $.ajax({
+                    type:'get',
+                    url:'/car/user/checkAccount2?userAccount='+userAccount,
+                    dataType:'json',
+                    async: false,
+                    contentType:'application/json',
+                    success:function (data) {
+                        flag = data.data;
+                        if (data.data == true){
+                            $("#tishi").html("账号重复");
+                            $("#tishi").css({color:"red"});
+                        }else{
+                            $("#tishi").html("账号可用");
+                            $("#tishi").css({color:"green"});
+                        }
+                    }
+                });
+                if(flag){
+                    return "账号已存在";
+                }
+            },
+            checkName:function () {
+                var userName = $('#userName').val();
+                var flag = false;
+                $.ajax({
+                    type:'get',
+                    url:'/car/user/checkName?userName='+userName,
+                    dataType:'json',
+                    async: false,
+                    contentType:'application/json',
+                    success:function (data) {
+                        flag = data.data;
+                        if (data.data == true){
+                            $("#tishi2").html("姓名存在");
+                            $("#tishi2").css({color:"red"});
+                        }else{
+                            $("#tishi2").html("姓名可用");
+                            $("#tishi2").css({color:"green"});
+                        }
+                    }
+                });
+                if(flag){
+                    return "姓名已存在";
+                }
+            },
+            checkTel:function () {
+                var tel = $('#tel').val();
+                var flag = false;
+                $.ajax({
+                    type:'get',
+                    url:'/car/user/checkTel?tel='+tel,
+                    dataType:'json',
+                    async: false,
+                    contentType:'application/json',
+                    success:function (data) {
+                        flag = data.data;
+                        if (data.data == true){
+                            $("#tishi3").html("手机号已存在");
+                            $("#tishi3").css({color:"red"});
+                        }else{
+                            $("#tishi3").html("手机号可用");
+                            $("#tishi3").css({color:"green"});
+                        }
+                    }
+                });
+                if(flag){
+                    return "手机号已存在";
+                }
+            },
+            tel:[
+                /^1[3456789]\d{9}$/,'请输入正确的手机号'
+            ],
+            userName:[
+                /^[\u4E00-\u9FA5A-Za-z]+$/,'只能输入中文或英文'
+            ],
+            userAccount:[
+                /^[a-zA-Z0-9_-]{4,16}$/,'4到16位（字母，数字，下划线，减号）'
+            ],
+            pwd:[
+                /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/,'最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符  '
+            ]
+        });
+
+        //搜索
+        $("#search").on('click',function (){
+            //搜索条件
+            var userAccount = $("#userAccount3").val();
+            var tel = $("#tel3").val();
+            var departName = $("#departName3").val();
+            table.reload('demo', {
+                url:'/car/user/searchUser'
+                , where: {
+                    'userAccount':userAccount,
+                    'tel':tel,
+                    'departName':departName
+                }
+            });
+        })
+
+    });
+</script>
+</body>
+<!--添加模态框-->
+<div class="addPage" style="display: none">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="userAccount" required  lay-verify="checkAccount|userAccount|required" placeholder="请输入账号" autocomplete="off" class="layui-input" id="userAccount">
+                <span id="tishi"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="userName" required  lay-verify="checkName|userName|required" placeholder="请输入姓名" autocomplete="off" class="layui-input" id="userName">
+                <span id="tishi2"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="pwd" required  lay-verify="required|pwd" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <select name="sex" lay-verify="required">
+                    <option value=""></option>
+                    <option value="0">男</option>
+                    <option value="1">女</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号</label>
+            <div class="layui-input-block">
+                <input type="text" name="tel" required  lay-verify="tel|required|checkTel" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+                <span id="tishi3"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="addr" required  lay-verify="required" placeholder="请输入地址" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">部门</label>
+            <div class="layui-input-block">
+                <select name="departName" lay-verify="required" id="departName" lay-search>
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-block">
+                <select name="roleid" lay-verify="required">
+                    <option value=""></option>
+                    <option value="2">普通用户</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-input-block" style="display: none">
+                <a class="layui-btn" lay-submit lay-filter="AddformDemo" style="display: none">立即提交</a>
+                <button type="reset" class="layui-btn layui-btn-primary" style="display: none" >重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--end-->
+<!--编辑模态框-->
+<div class="editPage" style="display: none">
+    <form class="layui-form" lay-filter="editformdata">
+        <input type="text" name="userinfoid" style="display: none">
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="userAccount" required  lay-verify="required|checkAccountEdit" placeholder="请输入账号" autocomplete="off" class="layui-input" id="userAccount2" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="userName" required  lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input"readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="text" name="pwd" required  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input" id="pwd">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <select name="sex" lay-verify="required">
+                    <option value=""></option>
+                    <option value="0">男</option>
+                    <option value="1">女</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号</label>
+            <div class="layui-input-block">
+                <input type="text" name="tel" required  lay-verify="tel|required" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="addr" required  lay-verify="required" placeholder="请输入地址" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">部门</label>
+            <div class="layui-input-block">
+                <select name="departName" lay-verify="required" id="departName2" lay-search>
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-block">
+                <select name="roleid" lay-verify="required">
+                    <option value=""></option>
+                    <option value="1">超级管理员</option>
+                    <option value="2">普通用户</option>
+                    <option value="3">管理员</option>
+                    <option value="4">调度员</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-input-block" style="display: none">
+                <a class="layui-btn" lay-submit lay-filter="EditformDemo" style="display: none">立即提交</a>
+                <button type="reset" class="layui-btn layui-btn-primary" style="display: none" >重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--end-->
+</html>

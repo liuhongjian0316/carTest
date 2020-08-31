@@ -1,0 +1,9 @@
+
+L
+java:S2696"6Make the enclosing method "static" or remove this set.(—ÿ¶“
+‰
+java:S1130"sRemove the declaration of thrown exception 'org.springframework.beans.BeansException' which is a runtime exception.(¯¶…œ
+H
+java:S1128	"2Remove this unused import 'java.sql.SQLException'.(ÛïÆŸ
+c
+java:S1128"FRemove this unused import 'org.springframework.core.annotation.Order'.(ÖŽ¨æ8ˆÑÿÊ².

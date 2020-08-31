@@ -1,0 +1,107 @@
+
+Rjavascript:S1854Õ
+"0Remove this useless assignment to variable "me".(§ÉÑ¥øÿÿÿÿ
+=javascript:S2814"'color' is already defined.(ÏÍˆóøÿÿÿÿ
+Ujavascript:S1854‡"9Remove this useless assignment to variable "canvasLayer".(¯şû`
+9javascript:S2814”"'i' is already defined.(áºÕŒÿÿÿÿÿ
+5javascript:S2814ı"'id' is already defined.(“ÛìÓ
+8javascript:S1116"Unnecessary semicolon.(ôŸìúÿÿÿÿ
+Ojavascript:S1854‘"2Remove this useless assignment to variable "path".(ø©ï¿
+Pjavascript:S1117¤
+".'size' is already declared in the upper scope.(Â‰¨üÿÿÿÿ
+Pjavascript:S1854«"3Remove this useless assignment to variable "point".(¤Š 
+Ljavascript:S1854ñ"0Remove this useless assignment to variable "di".(½´–
+Djavascript:S1940Î"'Use the opposite operator (!=) instead.(ù˜·
+Vjavascript:S1117Ó"4'start_time' is already declared in the upper scope.(ÿûÅıÿÿÿÿ
+ujavascript:S2703•"XAdd the "let", "const" or "var" keyword to this declaration of "id" to make it explicit.(¾Öı
+Zjavascript:S1481â"8Remove the declaration of the unused 'percent' variable.(ë„„Ëıÿÿÿÿ
+Jjavascript:S1117¼
+".'size' is already declared in the upper scope.(Ö§ø?
+tjavascript:S2703›"WAdd the "let", "const" or "var" keyword to this declaration of "i" to make it explicit.(µÛú
+Djavascript:S1515ü	"'Define this function outside of a loop.(šéÜï
+8javascript:S1116Â"Unnecessary semicolon.(ôŸìúÿÿÿÿ
+=javascript:S2814Ë"'after' is already defined.( Ò¨åşÿÿÿÿ
+Kjavascript:S1117¼
+"/'total' is already declared in the upper scope.(Ö§ø?
+Ujavascript:S1481á
+"3Remove the declaration of the unused 'me' variable.(§ÉÑ¥øÿÿÿÿ
+9javascript:S2814È"'before' is already defined.(Ëşí
+Vjavascript:S1481Ê"9Remove the declaration of the unused 'trackBox' variable.(ªøÛ‚
+8javascript:S1116Ì"Unnecessary semicolon.(ôŸìúÿÿÿÿ
+<javascript:S2814½
+"'size' is already defined.(ßã˜™üÿÿÿÿ
+9javascript:S2814Š"'i' is already defined.(áºÕŒÿÿÿÿÿ
+Rjavascript:S1481ÿ"5Remove the declaration of the unused 'time' variable.(ÇÏÜµ
+Ojavascript:S1117ş"2'cacheCtx' is already declared in the upper scope.(ÑÓòØ
+javascript:S3923‡"]This conditional operation returns the same value whether the condition is "true" or "false".(×›æêüÿÿÿÿ
+>javascript:S2814º"!'playClicked' is already defined.(ãä¨
+Ojavascript:S1117æ"+'e' is already declared in the upper scope.(ğÀÖ­8öÂğÃ.
+5javascript:S2814¨"'id' is already defined.(“ÛìÓ
+Zjavascript:S1481İ"8Remove the declaration of the unused 'ctrMove' variable.(‚Æ—‰ÿÿÿÿÿ
+8javascript:S28147"'i' is already defined.(éÆ¸·ıÿÿÿÿ
+Rjavascript:S1854‰	"0Remove this useless assignment to variable "me".(§ÉÑ¥øÿÿÿÿ
+Wjavascript:S1854İ"5Remove this useless assignment to variable "ctrMove".(‚Æ—‰ÿÿÿÿÿ
+Sjavascript:S1481å"6Remove the declaration of the unused 'pixel' variable.(ƒÅ³­
+Ujavascript:S1481‰	"3Remove the declaration of the unused 'me' variable.(§ÉÑ¥øÿÿÿÿ
+Ujavascript:S1481Õ
+"3Remove the declaration of the unused 'me' variable.(§ÉÑ¥øÿÿÿÿ
+Vjavascript:S1481ø"9Remove the declaration of the unused 'cacheCtx' variable.(„µ’·
+Ljavascript:S1481ú"*Remove unused function 'createCacheImage'.(¨Ş•üùÿÿÿÿ
+Ujavascript:S1854„"8Remove this useless assignment to variable "endTimeStr".(¥˜ÃÛ
+Wjavascript:S1854ƒ":Remove this useless assignment to variable "startTimeStr".(êìË§
+Sjavascript:S1481ÿ"6Remove the declaration of the unused 'alpha' variable.(¹ş‰¦
+Ijavascript:S1117Ì	",'li' is already declared in the upper scope.(šú
+:javascript:S2814È"'id' is already defined.(½›Â¹úÿÿÿÿ
+8javascript:S1116Ò"Unnecessary semicolon.(ôŸìúÿÿÿÿ
+Pjavascript:S1854¯"3Remove this useless assignment to variable "stepB".(èê–¿
+yjavascript:S2703È	"WAdd the "let", "const" or "var" keyword to this declaration of "d" to make it explicit.(â‰“Çıÿÿÿÿ
+Ijavascript:S1117¾",'li' is already declared in the upper scope.(šú
+Sjavascript:S1481¯"6Remove the declaration of the unused 'stepB' variable.(èê–¿
+8javascript:S2814ä"'point' is already defined.(±ßéÁ
+Zjavascript:S1481ƒ"=Remove the declaration of the unused 'startTimeStr' variable.(êìË§
+Ojavascript:S1481ß"3Remove the declaration of the unused 'me' variable.(õæÇ
+5javascript:S2814×"'id' is already defined.(“ÛìÓ
+Ijavascript:S1117",'li' is already declared in the upper scope.(šú
+Ljavascript:S1854ß"0Remove this useless assignment to variable "me".(õæÇ
+Pjavascript:S1854å"3Remove this useless assignment to variable "pixel".(ƒÅ³­
+Rjavascript:S1854á
+"0Remove this useless assignment to variable "me".(§ÉÑ¥øÿÿÿÿ
+Xjavascript:S1481‡"<Remove the declaration of the unused 'canvasLayer' variable.(¯şû`
+Pjavascript:S1854ÿ"3Remove this useless assignment to variable "alpha".(¹ş‰¦
+zjavascript:S2703”"]Add the "let", "const" or "var" keyword to this declaration of "percent" to make it explicit.(¦¥‚é
+:javascript:S2814ü"'options' is already defined.(¡äŠ
+9javascript:S2814€"'before' is already defined.(Ëşí
+Ojavascript:S1854ÿ"2Remove this useless assignment to variable "time".(ÇÏÜµ
+8javascript:S1116º"Unnecessary semicolon.(ôŸìúÿÿÿÿ
+Rjavascript:S1854î"0Remove this useless assignment to variable "dN".(ÿï·Âøÿÿÿÿ
+8javascript:S1116Œ"Unnecessary semicolon.(ôŸìúÿÿÿÿ
+Sjavascript:S1854Ê"6Remove this useless assignment to variable "trackBox".(ªøÛ‚
+<javascript:S2814¥
+"'size' is already defined.(ˆÇ±ìûÿÿÿÿ
+Ojavascript:S1481ñ"3Remove the declaration of the unused 'di' variable.(½´–
+Ijavascript:S1940¶"'Use the opposite operator (>=) instead.(’Á›Áÿÿÿÿÿ
+Jjavascript:S1117Â"-'ctx' is already declared in the upper scope.(†Ä”ï
+Ljavascript:S1854‚"/Remove this useless assignment to variable "h".(¼±±
+Ojavascript:S1481‚"2Remove the declaration of the unused 'h' variable.(¼±±
+=javascript:S2814ƒ"'after' is already defined.( Ò¨åşÿÿÿÿ
+Tjavascript:S1854û"8Remove this useless assignment to variable "selectDate".(’ïŒ}
+Qjavascript:S1117¤
+"/'total' is already declared in the upper scope.(Â‰¨üÿÿÿÿ
+Qjavascript:S1117 "/'track' is already declared in the upper scope.( ¿³­ÿÿÿÿÿ
+Ojavascript:S1117Ì
+"2'curIndex' is already declared in the upper scope.(×ÈôØ
+Mjavascript:S1117î"+'e' is already declared in the upper scope.(Ëüåòşÿÿÿÿ
+9javascript:S2814‚"'i' is already defined.(áºÕŒÿÿÿÿÿ
+8javascript:S1116¾"Unnecessary semicolon.(ôŸìúÿÿÿÿ
+Djavascript:S1515¶"'Define this function outside of a loop.(šéÜï
+Sjavascript:S1481Ö"6Remove the declaration of the unused 'total' variable.(ÄşÿŒ
+3javascript:S2814"'i' is already defined.(ÖÍ•§
+Ujavascript:S1117Ä"8'animationLayer' is already declared in the upper scope.(ˆŞ„Ú
+8javascript:S1116"Unnecessary semicolon.(ôŸìúÿÿÿÿ
+Ujavascript:S1481î"3Remove the declaration of the unused 'dN' variable.(ÿï·Âøÿÿÿÿ
+Rjavascript:S1481‘"5Remove the declaration of the unused 'path' variable.(ø©ï¿
+Ojavascript:S1117´
+"2'curIndex' is already declared in the upper scope.(×ÈôØ
+Xjavascript:S1481„";Remove the declaration of the unused 'endTimeStr' variable.(¥˜ÃÛ
+]javascript:S3516";Refactor this function to not always return the same value.(˜ÔÍÔøÿÿÿÿ
+Pjavascript:S1854·"3Remove this useless assignment to variable "track".(ıÏÃÓ

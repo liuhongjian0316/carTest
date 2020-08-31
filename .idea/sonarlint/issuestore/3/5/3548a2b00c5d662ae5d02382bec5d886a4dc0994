@@ -1,0 +1,5 @@
+
+\
+java:S1118":Add a private constructor to hide the implicit public one.(÷”É½ûÿÿÿÿ8Ú€Õé².
+”
+java:S1130"wRemove the declaration of thrown exception 'javax.servlet.ServletException', as it cannot be thrown from method's body.(ò­—¬8ÜÇ×é².

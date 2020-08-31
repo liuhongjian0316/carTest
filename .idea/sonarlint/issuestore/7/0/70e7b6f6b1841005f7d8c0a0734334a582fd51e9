@@ -1,0 +1,18 @@
+
+U	java:S106&"9Replace this use of System.out or System.err by a logger.(Æ´£Æ8öíşªÃ.
+U	java:S1064"9Replace this use of System.out or System.err by a logger.(À‘ä8×åªªÃ.
+g
+java:S1128"ERemove this unused import 'org.springframework.stereotype.Component'.(Ş÷Ñ¸ÿÿÿÿÿ8—š«Ã.
+c
+java:S21429"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€8×åªªÃ.
+H
+java:S1128"+Remove this unused import 'java.util.Date'.(¸…¼ü8‡„³§Ã.
+U	java:S106-"9Replace this use of System.out or System.err by a logger.(Ãà½“8ÿÆ¬ªÃ.
+U	java:S106,"9Replace this use of System.out or System.err by a logger.(Çóã–8×åªªÃ.
+“
+java:S1130+"vRemove the declaration of thrown exception 'org.quartz.SchedulerException', as it cannot be thrown from method's body.(úÉ¡Ï8×åªªÃ.
+X	java:S125"<This block of commented-out lines of code should be removed.(İ‚àï8ßãªÃ.
+Z	java:S1065"9Replace this use of System.out or System.err by a logger.(ãîŸáüÿÿÿÿ8ÿîõ¨Ã.
+]	java:S125"<This block of commented-out lines of code should be removed.(­©“üüÿÿÿÿ8ÄÒâªÃ.
+T
+java:S1128"7Remove this unused import 'work.aijiu.job.MyScheduler'.(æºÀè8®ÉÀ¨Ã.

@@ -1,0 +1,14 @@
+
+L
+java:S1128
+"6Remove this unused import 'work.aijiu.entity.Carinfo'.(ªóªø
+f	java:S1177"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(­Ï›¿
+f	java:S117<"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÚáÁð
+G
+java:S1135"2Complete the task associated to this TODO comment.(£°§\
+f	java:S117<"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÚáÁð
+h
+java:S2184m"FCast one of the operands of this multiplication operation to a "long".(Ø×…øÿÿÿÿ8û‘Ù˜Ã.
+f	java:S1177"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(­Ï›¿
+Z
+java:S1128"?Remove this unused import 'work.aijiu.common.utils.PageResult'.(¦¨µ—üÿÿÿÿ

@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>车辆信息</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+    <style>
+        .demo-input{padding-left: 10px; height: 38px; min-width: 200px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+    </style>
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;max-height: 100%">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-search">筛选搜索</i>
+        </div>
+        <form class="layui-form" action="" id="searchformdate">
+            <div class="layui-row">
+                <div class="layui-col-md3">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">车牌号码</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="plateNumber" placeholder="请输入车牌号" autocomplete="off" class="layui-input" id="carNum">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="layui-form-item"  >
+                        <label class="layui-form-label">车辆类别</label>
+                        <div class="layui-input-block">
+                            <select name="vehicleClassname" id="cartype" lay-search>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">品牌类型</label>
+                        <div class="layui-input-block">
+                            <select name="brandModel" lay-verify="required" lay-search  id="model">
+                                <option value="">品牌类型</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md3">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">车辆状态</label>
+                        <div class="layui-input-block">
+                            <select name="state"  id="state">
+                                <option value=""></option>
+                                <option value="0">已损坏</option>
+                                <option value="1">正常</option>
+                                <option value="2">已借出</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <label class="layui-form-label">注册时间</label>
+                    <div class="layui-input-block">
+                        <input  name="regTime"  class="demo-input" placeholder="请选择日期" id="test1" readonly="readonly">
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <label class="layui-form-label">年检时间</label>
+                    <div class="layui-input-block">
+                        <input name="examinationTime" class="demo-input" placeholder="请选择日期" id="test2" readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="position: absolute;right: 25px;top:20px">
+                <div class="layui-input-block">
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <a class="layui-btn layui-btn-normal"  data-type="reload" lay-filter="serachformDemo" id="search">查询结果</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs">数据列表</i> <i style="float: right;"><a class="layui-btn layui-btn-normal" id="addBtn">添加</a></i>
+        </div>
+    </div>
+    <div class="layui-card">
+        <table class="layui-hide" id="demo" lay-filter="test"></table>
+    </div>
+    <div class="layui-card" style="display: none" id="card2">
+        <table class="layui-hide" id="demo2" lay-filter="test2" style="display: none"></table>
+    </div>
+</div>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script type="text/html" id="titleTpl">
+    {{#  if(d.state == 0){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">已损坏</a>
+    {{#  } else if(d.state == 1){ }}
+    <a class="layui-btn layui-btn-xs">正常</a>
+    {{#  }  else if(d.state == 2){ }}
+    <a class="layui-btn layui-btn-warm layui-btn-xs">已借出</a>
+    {{#  }}}
+</script>
+<script type="text/html" id="titleTpl2">
+    {{ d.ratedPassengers }}人
+</script>
+
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script th:inline="none">
+    layui.config({
+        version: '1584613945938' //为了更新 js 缓存，可忽略
+    });
+
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function(){
+        var laydate = layui.laydate //日期
+            ,laypage = layui.laypage //分页
+            ,layer = layui.layer //弹层
+            ,table = layui.table //表格
+            ,form = layui.form //表单
+            ,carousel = layui.carousel //轮播
+            ,upload = layui.upload //上传
+            ,element = layui.element //元素操作
+            ,slider = layui.slider //滑块
+
+        var oleplateNumber = null;
+        //时间选择器
+        laydate.render({
+            elem:'#regTime'
+            ,type: 'date'
+        });
+        laydate.render({
+            elem:'#examinationTime'
+            ,type: 'date'
+        });
+        laydate.render({
+            elem:'#regTime2'
+            ,type: 'date'
+        });
+        laydate.render({
+            elem:'#examinationTime2'
+            ,type: 'date'
+        });
+        laydate.render({
+            elem:'#test1'
+            ,type: 'date'
+            ,range: true
+        });
+        laydate.render({
+            elem:'#test2'
+            ,type: 'date'
+            ,range: true
+        });
+        //下拉框初始化(车辆类型)
+        $.ajax({
+            url: '/car/cartypeinfo/cartypeName',
+            dataType: 'json',
+            type: 'post',
+            success: function (data) {
+                $.each(data.data, function (index, item) {
+                    $('#vehicleClassname').append(new Option(item.vehicleClassname, item.cartypeId));// 下拉菜单里添加元素
+                    $('#vehicleClassname2').append(new Option(item.vehicleClassname, item.cartypeId));// 下拉菜单里添加元素
+                    $('#cartype').append(new Option(item.vehicleClassname, item.cartypeId));// 下拉菜单里添加元素
+                });
+                layui.form.render("select");
+            }
+        })
+        //下拉框初始化(车辆品牌)
+        $.ajax({
+            url: '/car/modelinfo/modelName',
+            dataType: 'json',
+            type: 'post',
+            success: function (data) {
+                $.each(data.data, function (index, item) {
+                    $('#brandModel').append(new Option(item.name, item.name));// 下拉菜单里添加元素
+                    $('#brandModel2').append(new Option(item.name, item.name));// 下拉菜单里添加元素
+                    $('#model').append(new Option(item.name, item.name));// 下拉菜单里添加元素
+                });
+                layui.form.render("select");
+            }
+        })
+        //执行一个 table 实例
+        table.render({
+            elem: '#demo'
+            ,height: 580
+            ,url: '/car/carinfo/carPage' //数据接口
+            ,title: '车辆信息表'
+            ,page: true //开启分页
+            ,toolbar: 'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+            ,defaultToolbar:["filter","exports","print",{
+                title: '导出全部数据csv格式' //标题
+                ,layEvent: 'export-all-csv' //事件名，用于 toolbar 事件中使用
+                ,icon: 'layui-icon-export' //图标类名
+            },{
+                title: '导出全部数据csv格式' //标题
+                ,layEvent: 'export-all-xls' //事件名，用于 toolbar 事件中使用
+                ,icon: 'layui-icon-export' //图标类名
+            },{
+                title: '打印所有数据' //标题
+                ,layEvent: 'print-all' //事件名，用于 toolbar 事件中使用
+                ,icon: 'layui-icon-print' //图标类名
+            }]
+            ,totalRow: true //开启合计行
+            ,cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'}
+                ,{field: 'carinfoId', title: 'ID', width:60, sort: true, fixed: 'left'}
+                ,{field: 'plateNumber', title: '车牌号码', width:100}
+                ,{field: 'vehicleClassname', title: '车辆类型', width:100}
+                ,{field: 'frameNumber', title: '车架号', width: 100, sort: true}
+                ,{field: 'factoryNumber', title: '出厂编号', width:100, sort: true}
+                ,{field: 'brandModel', title: '品牌型号', width: 100, sort: true}
+                ,{field: 'regTime', title: '注册时间', width:120}
+                ,{field: 'examinationTime', title: '年检时间', width: 120}
+                ,{field: 'ratedPassengers', title: '载客', width: 60,templet: '#titleTpl2'}
+                ,{field: 'state', title: '状态', width: 100, sort: true,templet: '#titleTpl'}
+                ,{field: 'commentInfo', title: '备注信息', width: 135, sort: true}
+            ]],
+        });
+        //执行一个 table 实例
+        var table2 = table.render({
+            elem: '#demo2'
+            ,height: 580
+            ,url: '/car/carinfo/carPage' //数据接口
+            ,title: '车辆信息表'
+            ,limit: 2000
+            ,page: false //开启分页
+            ,totalRow: true //开启合计行
+            ,cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'}
+                ,{field: 'carinfoId', title: 'ID', width:60, sort: true, fixed: 'left'}
+                ,{field: 'plateNumber', title: '车牌号码', width:100}
+                ,{field: 'vehicleClassname', title: '车辆类型', width:100}
+                ,{field: 'frameNumber', title: '车架号', width: 100, sort: true}
+                ,{field: 'factoryNumber', title: '出厂编号', width:100, sort: true}
+                ,{field: 'brandModel', title: '品牌型号', width: 100, sort: true}
+                ,{field: 'regTime', title: '注册时间', width:120}
+                ,{field: 'examinationTime', title: '年检时间', width: 120}
+                ,{field: 'ratedPassengers', title: '载客', width: 60,templet: '#titleTpl2'}
+                ,{field: 'state', title: '状态', width: 100, sort: true,templet: '#titleTpl'}
+                ,{field: 'commentInfo', title: '备注信息', width: 135, sort: true}
+                ,{fixed: 'right', title:'操作',width: 165, align:'center', toolbar: '#barDemo'}
+            ]],
+            done: function (res, curr, count) {
+                exportData=res.data; 		//获取表格中的数据集合。
+            }
+        });
+        //监听头工具栏事件
+        table.on('toolbar(test)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id)
+                ,data = checkStatus.data; //获取选中的数据
+            switch(obj.event){
+                case 'export-all-csv':
+                    table.exportFile(table2.config.id,exportData,"csv");
+                    break;
+                case 'export-all-xls':
+                    table.exportFile(table2.config.id,exportData,"xls");
+                    break;
+                case 'print-all':
+                    print2();
+                    break;
+                case 'add':
+                    //打开添加模态框
+                    layer.open({
+                        type: 1,
+                        title: '添加信息', //不显示标题栏
+                        closeBtn: 2,
+                        offset: '10px',
+                        area: ['820px','585px'],
+                        shade: 0.8,
+                        id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                        btn: ['保存', '重置','取消'],
+                        btnAlign: 'r',
+                        moveType: 1, //拖拽模式，0或者1
+                        content:$('.addPage'),
+                        yes: function (index, layero) {
+                            //触发提交按钮
+                            layero.find('form').find('a[lay-submit]').click();
+                            //添加按钮触发
+                            form.on('submit(AddformDemo)', function(data){
+                                var loginLoadIndex = layer.load(2);
+                                $.ajax({
+                                    type:'post',
+                                    url:'/car/carinfo/addCar',
+                                    dataType:'json',
+                                    data:JSON.stringify(data.field),
+                                    contentType:'application/json',
+                                    success:function (data) {
+                                        layer.close(loginLoadIndex);
+                                        if (data.status == "200"){
+                                            layer.msg('添加成功');
+                                            table.reload('demo', {
+                                                url: '/car/carinfo/carPage'
+                                                ,where: {} //设定异步数据接口的额外参数
+                                            });
+                                            layer.close(index);
+
+                                        }else{
+                                            layer.close(loginLoadIndex);
+                                            layer.alert("添加失败");
+                                            $('#loginBtn').val("立即提交");
+                                        }
+                                    },
+                                    error:function () {
+                                        layer.close(loginLoadIndex);
+                                        layer.alert("网络不佳，请稍后重试");
+                                        $('#formDemo').val("正在添加...");
+                                    }
+                                });
+                            });
+                        },
+                        btn2:function (index,layero) {
+                            //触发重置按钮
+                            layero.find('form').find('button').click();
+
+                            return false;
+                        },
+                        btn3:function (index,layero) {
+                            //取消
+                        }
+                    });
+                    break;
+                case 'update':
+                    if(data.length === 0){
+                        layer.msg('请选择一行');
+                    } else if(data.length > 1){
+                        layer.msg('只能同时编辑一个');
+                    } else {
+                        //修改模态框赋值
+                        $.ajax({
+                            type:'get',
+                            url:'/car/carinfo/getCarById?carinfoId='+checkStatus.data[0].carinfoId,
+                            dataType:'json',
+                            contentType:'application/json',
+                            success:function (data) {
+                                //赋初始值
+                                form.val("editformdata",{
+                                    "carinfoId":data.data[0].carinfoId
+                                    ,"plateNumber":data.data[0].plateNumber
+                                    ,"vehicleClassname":data.data[0].vehicleClassname
+                                    ,"frameNumber":data.data[0].frameNumber
+                                    ,"factoryNumber":data.data[0].factoryNumber
+                                    ,"brandModel":data.data[0].brandModel
+                                    ,"regTime":data.data[0].regTime
+                                    ,"examinationTime":data.data[0].examinationTime
+                                    ,"ratedPassengers":data.data[0].ratedPassengers
+                                    ,"state":data.data[0].state
+                                    ,"commentInfo":data.data[0].commentInfo
+                                });
+                            },
+                            error:function () {
+                                layer.alert("网络不佳，数据获取不到");
+                            }
+                        });
+                        //打开编辑模态框
+                        layer.open({
+                            type: 1,
+                            title: '编辑信息', //不显示标题栏
+                            closeBtn: 2,
+                            offset: '10px',
+                            area: ['820px','585px'],
+                            shade: 0.8,
+                            id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                            btn: ['保存','取消'],
+                            btnAlign: 'r',
+                            moveType: 1, //拖拽模式，0或者1
+                            content:$('.editPage'),
+                            yes: function (index, layero) {
+                                //触发提交按钮
+                                layero.find('form').find('a[lay-submit]').click();
+                                //修改按钮触发
+                                form.on('submit(EditformDemo)', function(data){
+                                    var loginLoadIndex = layer.load(2);
+                                    $.ajax({
+                                        type:'post',
+                                        url:'/car/carinfo/editCar',
+                                        dataType:'json',
+                                        data:JSON.stringify(data.field),
+                                        contentType:'application/json',
+                                        success:function (data) {
+                                            layer.close(loginLoadIndex);
+                                            if (data.status == "200"){
+                                                layer.msg('修改成功');
+                                                table.reload('demo', {
+                                                    url: '/car/carinfo/carPage'
+                                                    ,where: {} //设定异步数据接口的额外参数
+                                                });
+                                                layer.closeAll();
+                                            }else{
+                                                layer.close(loginLoadIndex);
+                                                layer.alert("修改失败");
+                                                $('#loginBtn').val("立即提交");
+                                            }
+                                        },
+                                        error:function () {
+                                            layer.close(loginLoadIndex);
+                                            layer.alert("网络不佳，请稍后重试");
+                                            $('#formDemo').val("正在添加...");
+                                        }
+                                    });
+                                });
+                            },
+                        });
+                    }
+                    break;
+                case 'delete':
+                    //拼接复选框
+                    var delList = [];
+                    data.forEach(function (n, i) {
+                        delList.push(n.carinfoId);
+                    });
+                    if(data.length === 0){
+                        layer.msg('请选择一行');
+                    } else {
+                        layer.confirm('确定删除这'+data.length+'条数据吗', function(index){
+                            layer.close(index);
+                            var loginLoadIndex = layer.load(2);
+                            //向服务端发送删除指令
+                            $.ajax({
+                                type:'post',
+                                url:'/car/carinfo/delAllCar',
+                                data:JSON.stringify(delList),
+                                dataType: 'json',
+                                contentType:'application/json',
+                                success:function (data) {
+                                    if (data.status == "200") {
+                                        layer.msg('删除成功');
+                                        table.reload('demo', {
+                                            url: '/car/carinfo/carPage'
+                                            , where: {} //设定异步数据接口的额外参数
+                                        });
+                                        layer.closeAll();
+                                    }else{
+                                        layer.closeAll();
+                                        layer.close(loginLoadIndex);
+                                        layer.alert("删除失败");
+                                    }
+                                },
+                                error:function () {
+                                    layer.alert("网络不佳，数据获取不到");
+                                }
+                            });
+                        });
+                    }
+                    break;
+            };
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                ,layEvent = obj.event; //获得 lay-event 对应的值
+            if(layEvent === 'del'){
+                layer.confirm('真的删除这条数据吗', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构
+                    layer.close(index);
+                    var loginLoadIndex = layer.load(2);
+                    //向服务端发送删除指令
+                    $.ajax({
+                        type:'get',
+                        url:'car/carinfo/delCar?carinfoId='+data.carinfoId,
+                        //contentType:'application/text',
+                        success:function (data) {
+                            if (data.status == "200") {
+                                layer.msg('删除成功');
+                                table.reload('demo', {
+                                    url: '/car/carinfo/carPage'
+                                    , where: {} //设定异步数据接口的额外参数
+                                });
+                                layer.closeAll();
+                            }else{
+                                layer.closeAll();
+                                layer.close(loginLoadIndex);
+                                layer.alert("删除失败");
+                            }
+                        },
+                        error:function () {
+                            layer.alert("网络不佳，数据获取不到");
+                            layer.closeAll();
+                        }
+                    });
+                });
+            } else if(layEvent === 'edit'){
+                //修改模态框赋值
+                $.ajax({
+                    type:'get',
+                    url:'/car/carinfo/getCarById?carinfoId='+data.carinfoId,
+                    dataType:'json',
+                    async: false,
+                    contentType:'application/json',
+                    success:function (data) {
+                        //赋初始值
+                        form.val("editformdata",{
+                            "carinfoId":data.data[0].carinfoId
+                            ,"plateNumber":data.data[0].plateNumber
+                            ,"vehicleClassname":data.data[0].vehicleClassname
+                            ,"frameNumber":data.data[0].frameNumber
+                            ,"factoryNumber":data.data[0].factoryNumber
+                            ,"brandModel":data.data[0].brandModel
+                            ,"regTime":data.data[0].regTime
+                            ,"examinationTime":data.data[0].examinationTime
+                            ,"ratedPassengers":data.data[0].ratedPassengers
+                            ,"state":data.data[0].state
+                            ,"commentInfo":data.data[0].commentInfo
+                        });
+                        oleplateNumber = data.data[0].plateNumber
+                        $.ajax({
+                            type:'get',
+                            url:'/car/carinfo/oldplateNumber?plateNumber='+oleplateNumber,
+                            dataType:'json',
+                            contentType:'application/json',
+                            success:function (data) {
+                            }
+                        });
+                    },
+                    error:function () {
+                        layer.alert("网络不佳，数据获取不到");
+                    }
+                });
+                //打开编辑模态框
+                layer.open({
+                    type: 1,
+                    title: '编辑信息', //不显示标题栏
+                    closeBtn: 2,
+                    offset: '10px',
+                    area: ['820px','585px'],
+                    shade: 0.8,
+                    id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                    btn: ['保存','取消'],
+                    btnAlign: 'r',
+                    moveType: 1, //拖拽模式，0或者1
+                    content:$('.editPage'),
+                    yes: function (index, layero) {
+                        //触发提交按钮
+                        layero.find('form').find('a[lay-submit]').click();
+                        //修改按钮触发
+                        form.on('submit(EditformDemo)', function(data){
+                            var loginLoadIndex = layer.load(2);
+                            $.ajax({
+                                type:'post',
+                                url:'/car/carinfo/editCar',
+                                dataType:'json',
+                                data:JSON.stringify(data.field),
+                                contentType:'application/json',
+                                success:function (data) {
+                                    layer.close(loginLoadIndex);
+                                    if (data.status == "200"){
+                                        layer.msg('修改成功');
+                                        table.reload('demo', {
+                                            url: '/car/carinfo/carPage'
+                                            ,where: {} //设定异步数据接口的额外参数
+                                        });
+                                        layer.closeAll();
+                                    }else{
+                                        layer.close(loginLoadIndex);
+                                        layer.alert("修改失败");
+                                        $('#loginBtn').val("立即提交");
+                                    }
+                                },
+                                error:function () {
+                                    layer.close(loginLoadIndex);
+                                    layer.alert("网络不佳，请稍后重试");
+                                    $('#formDemo').val("正在添加...");
+                                }
+                            });
+                        });
+                    }
+                });
+
+            }
+        });
+        //自定义打印
+        window.print2 = function()
+        {
+            var v = document.createElement("div");
+            var f = ["<head>", "<style>", "body{font-size: 12px; color: #666;}", "table{width: 100%; height:100%;border-collapse: collapse; border-spacing: 0;}", "th,td{line-height: 20px; padding: 9px 15px; border: 1px solid #ccc; text-align: center; font-size: 12px; color: #666;}", "a{color: #666; text-decoration:none;}", "*.layui-hide{display: none}", "</style>", "</head>"].join("");
+            var h = window.open("打印窗口", "_blank");
+            //$(v).append($("#card2").html());
+            //$(v).append($("#card2").find('.layui-table-box').html());
+            //$(v).append($("#card2").find('.layui-table-total').html());
+            $(v).append($("#card2").find('.layui-table-header').html());
+            $(v).append($("#card2").find('.layui-table-body').html());
+            $(v).find("th.layui-table-patch").remove();
+            $(v).find(".layui-table-col-special").remove();
+            h.document.write(f + $(v).prop("outerHTML"));
+            h.document.close();
+            h.print();
+            h.close();
+        }
+        //添加按钮点击
+        $(document).on('click','#addBtn',function(){
+            layer.open({
+                type: 1,
+                title: '添加信息', //不显示标题栏
+                closeBtn: 2,
+                offset: '10px',
+                area: ['820px','585px'],
+                shade: 0.8,
+                id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                btn: ['添加', '重置','取消'],
+                btnAlign: 'r',
+                moveType: 1, //拖拽模式，0或者1
+                content:$('.addPage'),
+                yes: function (index, layero) {
+                    //触发提交按钮
+                    layero.find('form').find('a[lay-submit]').click();
+                    //添加按钮触发
+                    form.on('submit(AddformDemo)', function(data){
+                        var loginLoadIndex = layer.load(2);
+                        $.ajax({
+                            type:'post',
+                            url:'/car/carinfo/addCar',
+                            dataType:'json',
+                            data:JSON.stringify(data.field),
+                            contentType:'application/json',
+                            success:function (data) {
+                                layer.close(loginLoadIndex);
+                                if (data.status == "200"){
+                                    layer.msg('添加成功');
+                                    table.reload('demo', {
+                                        url: '/car/carinfo/carPage'
+                                        ,where: {} //设定异步数据接口的额外参数
+                                    });
+                                    layer.close(index);
+
+                                }else{
+                                    layer.close(loginLoadIndex);
+                                    layer.alert("添加失败");
+                                    $('#loginBtn').val("立即提交");
+                                }
+                            },
+                            error:function () {
+                                layer.close(loginLoadIndex);
+                                layer.alert("网络不佳，请稍后重试");
+                                $('#formDemo').val("正在添加...");
+                            }
+                        });
+                    });
+                },
+                btn2:function (index,layero) {
+                    //触发重置按钮
+                    layero.find('form').find('button').click();
+
+                    return false;
+                },
+                btn3:function (index,layero) {
+                    //取消
+                }
+            });
+        })
+        //自定义验证规则
+        form.verify({
+            checkNum:function () {
+                var plateNumber = $('#plateNumber').val();
+                var flag = false;
+                $.ajax({
+                    type:'get',
+                    url:'/car/carinfo/checkNumIsRep?plateNumber='+plateNumber,
+                    dataType:'json',
+                    async: false,
+                    contentType:'application/json',
+                    success:function (data) {
+                        flag = data.data;
+                        if (data.data == true){
+                            $("#tishi").html("车牌号重复");
+                            $("#tishi").css({color:"red"});
+                        }else{
+                            $("#tishi").html("车牌号可用");
+                            $("#tishi").css({color:"green"});
+                        }
+                    }
+                });
+                if(flag){
+                    return "车牌号已存在";
+                }
+            },
+            checkNumAsEdit:function () {
+                var plateNumber = $('#plateNumber2').val();
+                var flag = false;
+                $.ajax({
+                    type:'get',
+                    url:'/car/carinfo/checkNumIsRep2?plateNumber='+plateNumber,
+                    dataType:'json',
+                    async: false,
+                    contentType:'application/json',
+                    success:function (data) {
+                        flag = data.data;
+                        if (data.data == true){
+                            $("#tishi").html("车牌号重复");
+                            $("#tishi").css({color:"red"});
+                        }else{
+                            $("#tishi").html("车牌号可用");
+                            $("#tishi").css({color:"green"});
+                        }
+                    }
+                });
+                if(flag){
+                    return "车牌号已存在";
+                }
+            },
+            plateNumber:[
+                /(^[\u4E00-\u9FA5]{1}[A-Z0-9]{6}$)|(^[A-Z]{2}[A-Z0-9]{2}[A-Z0-9\u4E00-\u9FA5]{1}[A-Z0-9]{4}$)|(^[\u4E00-\u9FA5]{1}[A-Z0-9]{5}[挂学警军港澳]{1}$)|(^[A-Z]{2}[0-9]{5}$)|(^(08|38){1}[A-Z0-9]{4}[A-Z0-9挂学警军港澳]{1}$)/,
+                '常规格式：晋B12345'
+            ],
+            frameNumber:[
+                /^[A-Za-z0-9]{17}$/,'例如：LSVG026R9F2086645'
+            ],
+            factoryNumber:[
+                /^[0-9]{6}$/,'例如：143935'
+            ],
+            ratedPassengers:[
+                /(^[1-9]{2}$)|(^[1-9]{1}$)/,'单位人，请填写数字例如：4'
+            ]
+        });
+
+        //搜索
+        $("#search").on('click',function (){
+            //搜索条件
+            var carNum = $("#carNum").val();
+            var cartype = $("#cartype").val();
+            var model = $("#model").val();
+            var state = $("#state").val();
+            var regtime = $("#test1").val();
+            var examtime = $("#test2").val();
+            table.reload('demo', {
+                url:'/car/carinfo/searchCar'
+                , where: {
+                    'carNum':carNum,
+                    'cartype':cartype,
+                    'model':model,
+                    'state':state,
+                    'regtime':regtime,
+                    'examtime':examtime
+                }
+            });
+        })
+
+    });
+</script>
+</body>
+
+<!--添加模态框-->
+<div class="addPage" style="display: none">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">车牌号</label>
+            <div class="layui-input-block">
+                <input type="text" name="plateNumber" required  lay-verify="checkNum|plateNumber|required" placeholder="请输入车牌号" autocomplete="off" class="layui-input" id="plateNumber">
+                <span id="tishi"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">车辆类型</label>
+            <div class="layui-input-block">
+                <select name="vehicleClassname" lay-verify="required" id="vehicleClassname">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">车架号</label>
+            <div class="layui-input-block">
+                <input type="text" name="frameNumber" required  lay-verify="frameNumber|required" placeholder="请输入车架号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">出厂编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="factoryNumber" required  lay-verify="factoryNumber|required" placeholder="请输入出厂编号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">品牌型号</label>
+            <div class="layui-input-block">
+                <select name="brandModel" lay-verify="required" lay-search id="brandModel">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">注册时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="regTime" lay-verify="required" class="demo-input" placeholder="请选择时间" id="regTime2" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">年检时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="examinationTime" lay-verify="required" class="demo-input" placeholder="请选择时间" id="examinationTime2" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">载客定员</label>
+            <div class="layui-input-block">
+                <input type="text" name="ratedPassengers" required  lay-verify="ratedPassengers|required" placeholder="请输入载客定员（单位：人）" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注信息</label>
+            <div class="layui-input-block">
+                <input type="text" name="commentInfo" placeholder="请输入备注信息" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-input-block" style="display: none">
+                <a class="layui-btn" lay-submit lay-filter="AddformDemo" style="display: none">立即提交</a>
+                <button type="reset" class="layui-btn layui-btn-primary" style="display: none" >重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--end-->
+<!--编辑模态框-->
+<div class="editPage" style="display: none">
+    <form class="layui-form" lay-filter="editformdata">
+        <input type="text" name="carinfoId" style="display: none">
+
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">车牌号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="plateNumber" required  lay-verify="checkNumAsEdit|plateNumber|required" placeholder="请输入车牌号" autocomplete="off" class="layui-input" id="plateNumber2">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">车辆类型</label>
+                    <div class="layui-input-block">
+                        <select name="vehicleClassname" lay-verify="required" id="vehicleClassname2">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">车架号</label>
+            <div class="layui-input-block">
+                <input type="text" name="frameNumber" required  lay-verify="frameNumber|required" placeholder="请输入车架号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">出厂编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="factoryNumber" required  lay-verify="factoryNumber|required" placeholder="请输入出厂编号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">品牌型号</label>
+            <div class="layui-input-block">
+                <select name="brandModel" lay-verify="required" lay-search id="brandModel2">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">注册时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="regTime" lay-verify="required" class="demo-input" placeholder="请选择时间" id="regTime" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">年检时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="examinationTime" lay-verify="required" class="demo-input" placeholder="请选择时间" id="examinationTime" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">载客定员</label>
+            <div class="layui-input-block">
+                <input type="text" name="ratedPassengers" required  lay-verify="ratedPassengers|required" placeholder="请输入载客定员（单位：人）" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">车辆状态</label>
+            <div class="layui-input-block">
+                <select name="state" lay-verify="required">
+                    <option value=""></option>
+                    <option value="0">已损坏</option>
+                    <option value="1">正常</option>
+                    <option value="2">已借出</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注信息</label>
+            <div class="layui-input-block">
+                <input type="text" name="commentInfo" placeholder="请输入备注信息" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-input-block" style="display: none">
+                <a class="layui-btn" lay-submit lay-filter="EditformDemo" style="display: none">立即提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+<!--end-->
+<!--查看模态框-->
+</html>

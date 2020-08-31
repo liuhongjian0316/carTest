@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="work.aijiu.dao.InfraccioninfoDao">
+    <insert id="addInfraccion">
+        insert into t_infraccioninfo
+        (PLATE_NUMBER,DRIVING_LICENSE_NUMBER,INFRACCION_TIME,INFRACCION_SITE,INFRACCION_INFO,RESULTS_OF_TRANSACTION,INFRACCION_COST,COMMENT_INFO)
+        values
+        (#{plateNumber},#{drivingLicenseNumber},#{infraccionTime},#{infraccionSite},#{infraccionInfo},#{resultsOfTransaction},#{infraccionCost},#{commentInfo})
+
+    </insert>
+    <update id="update">
+        update t_infraccioninfo
+            set
+                PLATE_NUMBER = #{plateNumber},
+                DRIVING_LICENSE_NUMBER = #{drivingLicenseNumber},
+                INFRACCION_TIME = #{infraccionTime},
+                INFRACCION_SITE = #{infraccionSite},
+                INFRACCION_INFO = #{infraccionInfo},
+                RESULTS_OF_TRANSACTION = #{resultsOfTransaction},
+                INFRACCION_COST = #{infraccionCost},
+                COMMENT_INFO = #{commentInfo}
+            where
+                INFRACCIONINFO_ID = #{infraccioninfoId}
+    </update>
+    <delete id="delInfraccionById">
+        delete from t_infraccioninfo where INFRACCIONINFO_ID = #{infraccioninfoId}
+    </delete>
+    <select id="search" resultType="work.aijiu.entity.Infraccioninfo">
+        select * from t_infraccioninfo where
+        1=1
+        <if test="plateNumber != null and plateNumber !='' ">
+            and PLATE_NUMBER = #{plateNumber}
+        </if>
+        <if test="drivingLicenseNumber != null and drivingLicenseNumber !='' ">
+            and DRIVING_LICENSE_NUMBER = #{drivingLicenseNumber}
+        </if>
+        <if test="infraccionTime != null and infraccionTime !='' ">
+            and INFRACCION_TIME BETWEEN #{begin} and #{end}
+        </if>
+        limit #{page},#{limit}
+    </select>
+    <select id="selcetTicketAndTimeDate" resultType="java.util.Map">
+        select i.INFRACCION_TIME name ,count(i.INFRACCION_TIME) value
+        from t_infraccioninfo i
+        GROUP BY (i.INFRACCION_TIME)
+    </select>
+    <select id="selcetTicketCostAndTimeDate" resultType="java.util.Map">
+        select i.INFRACCION_TIME name ,sum(INFRACCION_COST) value
+        from t_infraccioninfo i
+        GROUP BY (i.INFRACCION_TIME)
+    </select>
+</mapper>

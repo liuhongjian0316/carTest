@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>罚单信息</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+    <style>
+        .demo-input{padding-left: 10px; height: 38px; min-width: 200px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+    </style>
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;max-height: 100%">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-search">筛选搜索</i>
+        </div>
+        <form class="layui-form" action="" id="searchformdate">
+            <div class="layui-row">
+                <div class="layui-col-md3">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">车牌号码</label>
+                        <div class="layui-input-block">
+                            <select name="plateNumber" id="plateNumber3">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="layui-form-item"  >
+                        <label class="layui-form-label">驾驶证号</label>
+                        <div class="layui-input-block">
+                            <select name="drivingLicenseNumber" id="drivingLicenseNumber3" lay-search>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <label class="layui-form-label">违章日期</label>
+                    <div class="layui-input-block">
+                        <input  name="infraccionTime"  class="demo-input" placeholder="请选择日期" id="infraccionTime3" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="position: absolute;right: 25px;top:20px">
+                <div class="layui-input-block">
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <a class="layui-btn layui-btn-normal"  data-type="reload" lay-filter="serachformDemo" id="search">查询结果</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs">数据列表</i> <i style="float: right"><a class="layui-btn layui-btn-normal" id="addBtn">添加</a></i>
+        </div>
+    </div>
+    <div class="layui-card">
+        <table class="layui-hide" id="demo" lay-filter="test"></table>
+    </div>
+</div>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script type="text/html" id="titleTpl">
+    {{ d.infraccionCost }}元
+</script>
+
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script th:inline="none">
+    layui.config({
+        version: '1584613945938' //为了更新 js 缓存，可忽略
+    });
+
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function(){
+        var laydate = layui.laydate //日期
+            ,laypage = layui.laypage //分页
+            ,layer = layui.layer //弹层
+            ,table = layui.table //表格
+            ,form = layui.form //表单
+            ,carousel = layui.carousel //轮播
+            ,upload = layui.upload //上传
+            ,element = layui.element //元素操作
+            ,slider = layui.slider //滑块
+        //时间选择器
+        laydate.render({
+            elem:'#infraccionTime'
+            ,type: 'date'
+        });
+        laydate.render({
+            elem:'#infraccionTime2'
+            ,type: 'date'
+        });
+        laydate.render({
+            elem:'#infraccionTime3'
+            ,type: 'date'
+            ,range: true
+        });
+        //下拉框初始化(车牌号)
+        $.ajax({
+            url: '/car/infraccion/getPlateNumber',
+            dataType: 'json',
+            type: 'post',
+            contentType:'application/json',
+            success: function (data) {
+                $.each(data.data, function (index, item) {
+                    $('#plateNumber').append(new Option(item.plateNumber, item.plateNumber));// 下拉菜单里添加元素
+                    $('#plateNumber2').append(new Option(item.plateNumber, item.plateNumber));// 下拉菜单里添加元素
+                    $('#plateNumber3').append(new Option(item.plateNumber, item.plateNumber));// 下拉菜单里添加元素
+                });
+                layui.form.render("select");
+            }
+        })
+        //下拉框初始化(驾驶证号)
+        $.ajax({
+            url: '/car/infraccion/getDLN',
+            dataType: 'json',
+            type: 'post',
+            contentType:'application/json',
+            success: function (data) {
+                $.each(data.data, function (index, item) {
+                    $('#drivingLicenseNumber').append(new Option(item.drivinglicenseNumber, item.drivinglicenseNumber));// 下拉菜单里添加元素
+                    $('#drivingLicenseNumber2').append(new Option(item.drivinglicenseNumber, item.drivinglicenseNumber));// 下拉菜单里添加元素
+                    $('#drivingLicenseNumber3').append(new Option(item.drivinglicenseNumber, item.drivinglicenseNumber));// 下拉菜单里添加元素
+                });
+                layui.form.render("select");
+            }
+        })
+        //执行一个 table 实例
+        table.render({
+            elem: '#demo'
+            ,height: 420
+            ,url: '/car/infraccion/infraccioninfoPage' //数据接口
+            ,title: '车辆信息表'
+            ,page: true //开启分页
+            ,toolbar: 'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+            ,totalRow: true //开启合计行
+            ,cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'}
+                ,{field: 'infraccioninfoId', title: 'ID', width:60, sort: true, fixed: 'left'}
+                ,{field: 'plateNumber', title: '车牌号码', width:100}
+                ,{field: 'drivingLicenseNumber', title: '驾驶证号码', width:100}
+                ,{field: 'infraccionTime', title: '违章日期', width: 100, sort: true}
+                ,{field: 'infraccionSite', title: '违章地点', width:100, sort: true}
+                ,{field: 'infraccionInfo', title: '违章信息明细', width: 100, sort: true}
+                ,{field: 'resultsOfTransaction', title: '处理结果', width:120}
+                ,{field: 'infraccionCost', title: '违章费用', width: 120,templet: '#titleTpl'}
+                ,{field: 'commentInfo', title: '备注信息', width: 135, sort: true}
+                ,{fixed: 'right', title:'操作',width: 165, align:'center', toolbar: '#barDemo'}
+            ]]
+        });
+
+        //监听头工具栏事件
+        table.on('toolbar(test)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id)
+                ,data = checkStatus.data; //获取选中的数据
+            switch(obj.event){
+                case 'add':
+                    //打开添加模态框
+                    layer.open({
+                        type: 1,
+                        title: '添加信息', //不显示标题栏
+                        closeBtn: 2,
+                        offset: '10px',
+                        area: ['826px','600px'],
+                        shade: 0.8,
+                        id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                        btn: ['保存','重置','取消'],
+                        btnAlign: 'r',
+                        moveType: 1, //拖拽模式，0或者1
+                        content:$('.addPage'),
+                        yes: function (index, layero) {
+                            //触发提交按钮
+                            layero.find('form').find('a[lay-submit]').click();
+                            //添加按钮触发
+                            form.on('submit(AddformDemo)', function(data){
+                                var loginLoadIndex = layer.load(2);
+                                $.ajax({
+                                    type:'post',
+                                    url:'/car/infraccion/addInfraccion',
+                                    dataType:'json',
+                                    data:JSON.stringify(data.field),
+                                    contentType:'application/json',
+                                    success:function (data) {
+                                        layer.close(loginLoadIndex);
+                                        if (data.status == "200"){
+                                            layer.msg('添加成功');
+                                            table.reload('demo', {
+                                                url: '/car/infraccion/infraccioninfoPage'
+                                                ,where: {} //设定异步数据接口的额外参数
+                                            });
+                                            layer.close(index);
+
+                                        }else{
+                                            layer.close(loginLoadIndex);
+                                            layer.alert("添加失败");
+                                            $('#loginBtn').val("立即提交");
+                                        }
+                                    },
+                                    error:function () {
+                                        layer.close(loginLoadIndex);
+                                        layer.alert("网络不佳，请稍后重试");
+                                        $('#formDemo').val("正在添加...");
+                                    }
+                                });
+                            });
+                        },
+                        btn2:function (index,layero) {
+                            //触发重置按钮
+                            layero.find('form').find('button').click();
+
+                            return false;
+                        },
+                        btn3:function (index,layero) {
+                            //取消
+                        }
+                    });
+                    break;
+                case 'update':
+                    if(data.length === 0){
+                        layer.msg('请选择一行');
+                    } else if(data.length > 1){
+                        layer.msg('只能同时编辑一个');
+                    } else {
+                        //修改模态框赋值
+                        $.ajax({
+                            type:'get',
+                            url:'/car/infraccion/getInfraccionById?infraccioninfoId='+checkStatus.data[0].infraccioninfoId,
+                            contentType:'application/json',
+                            dataType:'json',
+                            success:function (data) {
+                                //赋初始值
+                                form.val("editformdata",{
+                                    "infraccioninfoId":data.data[0].infraccioninfoId
+                                    ,"plateNumber":data.data[0].plateNumber
+                                    ,"drivingLicenseNumber":data.data[0].drivingLicenseNumber
+                                    ,"infraccionTime":data.data[0].infraccionTime
+                                    ,"infraccionSite":data.data[0].infraccionSite
+                                    ,"infraccionInfo":data.data[0].infraccionInfo
+                                    ,"resultsOfTransaction":data.data[0].resultsOfTransaction
+                                    ,"infraccionCost":data.data[0].infraccionCost
+                                    ,"commentInfo":data.data[0].commentInfo
+                                });
+                            },
+                            error:function () {
+                                layer.alert("网络不佳，数据获取不到");
+                            }
+                        });
+                        //打开编辑模态框
+                        layer.open({
+                            type: 1,
+                            title: '编辑信息', //不显示标题栏
+                            closeBtn: 2,
+                            offset: '10px',
+                            area: ['826px','600px'],
+                            shade: 0.8,
+                            id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                            btn: ['保存','取消'],
+                            btnAlign: 'r',
+                            moveType: 1, //拖拽模式，0或者1
+                            content:$('.editPage'),
+                            yes: function (index, layero) {
+                                //触发提交按钮
+                                layero.find('form').find('a[lay-submit]').click();
+                                //修改按钮触发
+                                form.on('submit(EditformDemo)', function(data){
+                                    var loginLoadIndex = layer.load(2);
+                                    $.ajax({
+                                        type:'post',
+                                        url:'/car/infraccion/editInfraccion',
+                                        dataType:'json',
+                                        data:JSON.stringify(data.field),
+                                        contentType:'application/json',
+                                        success:function (data) {
+                                            layer.close(loginLoadIndex);
+                                            if (data.status == "200"){
+                                                layer.msg('修改成功');
+                                                table.reload('demo', {
+                                                    url: '/car/infraccion/infraccioninfoPage'
+                                                    ,where: {} //设定异步数据接口的额外参数
+                                                });
+                                                layer.closeAll();
+                                            }else{
+                                                layer.close(loginLoadIndex);
+                                                layer.alert("修改失败");
+                                                $('#loginBtn').val("立即提交");
+                                            }
+                                        },
+                                        error:function () {
+                                            layer.close(loginLoadIndex);
+                                            layer.alert("网络不佳，请稍后重试");
+                                            $('#formDemo').val("正在添加...");
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    }
+                    break;
+                case 'delete':
+                    //拼接复选框
+                    var delList = [];
+                    data.forEach(function (n, i) {
+                        delList.push(n.infraccioninfoId);
+                    });
+                    if(data.length === 0){
+                        layer.msg('请选择一行');
+                    } else {
+                        layer.confirm('确定删除这'+data.length+'条数据吗', function(index){
+                            layer.close(index);
+                            var loginLoadIndex = layer.load(2);
+                            //向服务端发送删除指令
+                            $.ajax({
+                                type:'post',
+                                url:'/car/infraccion/delAllInfraccion',
+                                data:JSON.stringify(delList),
+                                contentType:'application/json',
+                                dataType:'json',
+                                success:function (data) {
+                                    if (data.status == "200") {
+                                        layer.msg('删除成功');
+                                        table.reload('demo', {
+                                            url: '/car/infraccion/infraccioninfoPage'
+                                            ,where: {} //设定异步数据接口的额外参数
+                                        });
+                                        layer.closeAll();
+                                    }else{
+                                        layer.closeAll();
+                                        layer.close(loginLoadIndex);
+                                        layer.alert("删除失败");
+                                    }
+                                },
+                                error:function () {
+                                    layer.alert("网络不佳，数据获取不到");
+                                }
+                            });
+                        });
+                    }
+                    break;
+            };
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                ,layEvent = obj.event; //获得 lay-event 对应的值
+            if(layEvent === 'del'){
+                layer.confirm('真的删除这条数据吗', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构
+                    layer.close(index);
+                    var loginLoadIndex = layer.load(2);
+                    //向服务端发送删除指令
+                    $.ajax({
+                        type:'get',
+                        url:'/car/infraccion/delInfraccionById?infraccioninfoId='+data.infraccioninfoId,
+                        contentType:'application/json',
+                        dataType:'json',
+                        success:function (data) {
+                            if (data.status == "200") {
+                                layer.msg('删除成功');
+                                table.reload('demo', {
+                                    url: '/car/infraccion/infraccioninfoPage'
+                                    ,where: {} //设定异步数据接口的额外参数
+                                });
+                                layer.closeAll();
+                            }else{
+                                layer.closeAll();
+                                layer.close(loginLoadIndex);
+                                layer.alert("删除失败");
+                            }
+                        },
+                        error:function () {
+                            layer.alert("网络不佳，数据获取不到");
+                            layer.closeAll();
+                        }
+                    });
+                });
+            } else if(layEvent === 'edit'){
+                //修改模态框赋值
+                $.ajax({
+                    type:'get',
+                    url:'/car/infraccion/getInfraccionById?infraccioninfoId='+data.infraccioninfoId,
+                    contentType:'application/json',
+                    dataType:'json',
+                    success:function (data) {
+                        //赋初始值
+                        form.val("editformdata",{
+                            "infraccioninfoId":data.data[0].infraccioninfoId
+                            ,"plateNumber":data.data[0].plateNumber
+                            ,"drivingLicenseNumber":data.data[0].drivingLicenseNumber
+                            ,"infraccionTime":data.data[0].infraccionTime
+                            ,"infraccionSite":data.data[0].infraccionSite
+                            ,"infraccionInfo":data.data[0].infraccionInfo
+                            ,"resultsOfTransaction":data.data[0].resultsOfTransaction
+                            ,"infraccionCost":data.data[0].infraccionCost
+                            ,"commentInfo":data.data[0].commentInfo
+                        });
+                    },
+                    error:function () {
+                        layer.alert("网络不佳，数据获取不到");
+                    }
+                });
+                //打开编辑模态框
+                layer.open({
+                    type: 1,
+                    title: '编辑信息', //不显示标题栏
+                    closeBtn: 2,
+                    offset: '10px',
+                    area: ['826px','600px'],
+                    shade: 0.8,
+                    id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                    btn: ['保存','取消'],
+                    btnAlign: 'r',
+                    moveType: 1, //拖拽模式，0或者1
+                    content:$('.editPage'),
+                    yes: function (index, layero) {
+                        //触发提交按钮
+                        layero.find('form').find('a[lay-submit]').click();
+                        //修改按钮触发
+                        form.on('submit(EditformDemo)', function(data){
+                            var loginLoadIndex = layer.load(2);
+                            $.ajax({
+                                type:'post',
+                                url:'/car/infraccion/editInfraccion',
+                                dataType:'json',
+                                data:JSON.stringify(data.field),
+                                contentType:'application/json',
+                                success:function (data) {
+                                    layer.close(loginLoadIndex);
+                                    if (data.status == "200"){
+                                        layer.msg('修改成功');
+                                        table.reload('demo', {
+                                            url: '/car/infraccion/infraccioninfoPage'
+                                            ,where: {} //设定异步数据接口的额外参数
+                                        });
+                                        layer.closeAll();
+                                    }else{
+                                        layer.close(loginLoadIndex);
+                                        layer.alert("修改失败");
+                                        $('#loginBtn').val("立即提交");
+                                    }
+                                },
+                                error:function () {
+                                    layer.close(loginLoadIndex);
+                                    layer.alert("网络不佳，请稍后重试");
+                                    $('#formDemo').val("正在添加...");
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+        });
+
+        //添加按钮点击
+        $(document).on('click','#addBtn',function(){
+            //打开添加模态框
+            layer.open({
+                type: 1,
+                title: '添加信息', //不显示标题栏
+                closeBtn: 2,
+                offset: '10px',
+                area: ['826px','600px'],
+                shade: 0.8,
+                id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                btn: ['保存','重置','取消'],
+                btnAlign: 'r',
+                moveType: 1, //拖拽模式，0或者1
+                content:$('.addPage'),
+                yes: function (index, layero) {
+                    //触发提交按钮
+                    layero.find('form').find('a[lay-submit]').click();
+                    //添加按钮触发
+                    form.on('submit(AddformDemo)', function(data){
+                        var loginLoadIndex = layer.load(2);
+                        $.ajax({
+                            type:'post',
+                            url:'/car/infraccion/addInfraccion',
+                            dataType:'json',
+                            data:JSON.stringify(data.field),
+                            contentType:'application/json',
+                            success:function (data) {
+                                layer.close(loginLoadIndex);
+                                if (data.status == "200"){
+                                    layer.msg('添加成功');
+                                    table.reload('demo', {
+                                        url: '/car/infraccion/infraccioninfoPage'
+                                        ,where: {} //设定异步数据接口的额外参数
+                                    });
+                                    layer.close(index);
+
+                                }else{
+                                    layer.close(loginLoadIndex);
+                                    layer.alert("添加失败");
+                                    $('#loginBtn').val("立即提交");
+                                }
+                            },
+                            error:function () {
+                                layer.close(loginLoadIndex);
+                                layer.alert("网络不佳，请稍后重试");
+                                $('#formDemo').val("正在添加...");
+                            }
+                        });
+                    });
+                },
+                btn2:function (index,layero) {
+                    //触发重置按钮
+                    layero.find('form').find('button').click();
+
+                    return false;
+                },
+                btn3:function (index,layero) {
+                    //取消
+                }
+            });
+        })
+        //自定义验证规则
+        form.verify({
+            infraccionCost:[
+                /^[0-9]*$/,'只能输入数字'
+            ]
+        });
+
+        //搜索
+        $("#search").on('click',function (){
+            //搜索条件
+            var plateNumber = $("#plateNumber3").val();
+            var drivingLicenseNumber = $("#drivingLicenseNumber3").val();
+            var infraccionTime = $("#infraccionTime3").val();
+            table.reload('demo', {
+                url:'/car/infraccion/searchInfracc'
+                , where: {
+                    'plateNumber':plateNumber,
+                    'drivingLicenseNumber':drivingLicenseNumber,
+                    'infraccionTime':infraccionTime
+                }
+            });
+        })
+
+    });
+</script>
+</body>
+<!--添加模态框-->
+<div class="addPage" style="display: none">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">车牌号码</label>
+            <div class="layui-input-block">
+                <select name="plateNumber" lay-verify="required" id="plateNumber">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">驾驶证号</label>
+            <div class="layui-input-block">
+                <select name="drivingLicenseNumber" lay-verify="required" id="drivingLicenseNumber">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">违章日期</label>
+            <div class="layui-input-block">
+                <input type="text" name="infraccionTime" lay-verify="required" class="demo-input" placeholder="请选择时间" id="infraccionTime">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">违章地点</label>
+            <div class="layui-input-block">
+                <input type="text" name="infraccionSite" required  lay-verify="required" placeholder="请输入违章地点" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">违章明细</label>
+            <div class="layui-input-block">
+                <input type="text" name="infraccionInfo" required  lay-verify="required" placeholder="请输入违章明细" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">处理结果</label>
+            <div class="layui-input-block">
+                <input type="text" name="resultsOfTransaction" required  lay-verify="required" placeholder="请输入处理结果" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">违章费用</label>
+            <div class="layui-input-block">
+                <input type="text" name="infraccionCost" required  lay-verify="infraccionCost|required" placeholder="请输入数字（单位：元）" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注信息</label>
+            <div class="layui-input-block">
+                <input type="text" name="commentInfo" placeholder="请输入备注信息" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-input-block" style="display: none">
+                <a class="layui-btn" lay-submit lay-filter="AddformDemo" style="display: none">立即提交</a>
+                <button type="reset" class="layui-btn layui-btn-primary" style="display: none" >重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--end-->
+<!--编辑模态框-->
+<div class="editPage" style="display: none">
+    <form class="layui-form" lay-filter="editformdata">
+        <input type="text" name="infraccioninfoId" style="display: none">
+        <div class="layui-form-item">
+            <label class="layui-form-label">车牌号码</label>
+            <div class="layui-input-block">
+                <select name="plateNumber" lay-verify="required" id="plateNumber2">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">驾驶证号</label>
+            <div class="layui-input-block">
+                <select name="drivingLicenseNumber" lay-verify="required" id="drivingLicenseNumber2">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">违章日期</label>
+            <div class="layui-input-block">
+                <input type="text" name="infraccionTime" lay-verify="required" class="demo-input" placeholder="请选择时间" id="infraccionTime2">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">违章地点</label>
+            <div class="layui-input-block">
+                <input type="text" name="infraccionSite" required  lay-verify="required" placeholder="请输入违章地点" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">违章明细</label>
+            <div class="layui-input-block">
+                <input type="text" name="infraccionInfo" required  lay-verify="required" placeholder="请输入违章明细" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">处理结果</label>
+            <div class="layui-input-block">
+                <input type="text" name="resultsOfTransaction" required  lay-verify="required" placeholder="请输入处理结果" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">违章费用</label>
+            <div class="layui-input-block">
+                <input type="text" name="infraccionCost" required  lay-verify="infraccionCost|required" placeholder="请输入数字（单位：元）" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注信息</label>
+            <div class="layui-input-block">
+                <input type="text" name="commentInfo" placeholder="请输入备注信息" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-input-block" style="display: none">
+                <a class="layui-btn" lay-submit lay-filter="EditformDemo" style="display: none">立即提交</a>
+                <button type="reset" class="layui-btn layui-btn-primary" style="display: none" >重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--end-->
+</html>

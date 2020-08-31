@@ -1,0 +1,27 @@
+
+u
+java:S2226"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(˜ÚÆ¯8Ì¼áö¹.
+…
+java:S1989 "cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8š·¿í³.
+V
+java:S4719F"9Replace charset name argument with StandardCharsets.UTF_8(š­‘ª8š·¿í³.
+m
+java:S1989o"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8š·¿í³.
+Q
+java:S1874u"/Remove this use of "Integer"; it is deprecated.(¬õÑúıÿÿÿÿ8š·¿í³.
+Q
+java:S1874u"/Remove this use of "Integer"; it is deprecated.(¬õÑúıÿÿÿÿ8š·¿í³.
+…
+java:S1989m"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8š·¿í³.
+
+java:S19897"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(Œ±ª¦8š·¿í³.
+s
+java:S1192+"QDefine a constant instead of duplicating this literal "vehicleClassname" 5 times.(Î¬âöùÿÿÿÿ8ãÅŒ³.
+z
+java:S2226"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(É¨Šøşÿÿÿÿ8š·¿í³.
+m
+java:S1989""PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8š·¿í³.
+
+java:S1989)"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(Œ±ª¦8š·¿í³.
+z
+java:S2226"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(¡»Âëüÿÿÿÿ8š·¿í³.

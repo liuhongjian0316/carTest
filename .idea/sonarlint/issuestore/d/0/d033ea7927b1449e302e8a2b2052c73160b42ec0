@@ -1,0 +1,34 @@
+
+E
+java:S11488"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ù‚Æ².
+V
+java:S4719"9Replace charset name argument with StandardCharsets.UTF_8(š­‘ª8Œß¸ê².
+]	java:S1251"<This block of commented-out lines of code should be removed.(½Õ‚Öùÿÿÿÿ8¬Ç“ì².
+b
+java:S32522"FUse static access with "com.alibaba.fastjson.JSON" for "toJSONString".(šÂÚ8ù‚Æ².
+W
+java:S18542";Remove this useless assignment to local variable "jsonStr".(šÂÚ8ÅªÚÅ².
+W
+java:S1854";Remove this useless assignment to local variable "jsonStr".(šÂÚ8Ùä…Æ².
+Z
+java:S1128"=Remove this unused import 'javax.servlet.ServletInputStream'.(Üƒ™û8ß©ûë².
+^
+java:S18544"<Remove this useless assignment to local variable "jsonStr2".(Ÿ±½òıÿÿÿÿ8ñ·Æ².
+N
+java:S1481",Remove this unused "jsonStr" local variable.(×ÒÔÒıÿÿÿÿ8ÅªÚÅ².
+N
+java:S1481&",Remove this unused "jsonStr" local variable.(×ÒÔÒıÿÿÿÿ8Ùä…Æ².
+V
+java:S4719)"9Replace charset name argument with StandardCharsets.UTF_8(š­‘ª8ß©ûë².
+h
+java:S32524"FUse static access with "com.alibaba.fastjson.JSON" for "toJSONString".(Ÿ±½òıÿÿÿÿ8ù‚Æ².
+I
+java:S1481'"-Remove this unused "jsonStr2" local variable.(¨Å”B8ù‚Æ².
+g
+java:S3252"EUse static access with "com.alibaba.fastjson.JSON" for "parseObject".(²°‚Ëûÿÿÿÿ8ÅªÚÅ².
+E
+java:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ÅªÚÅ².
+
+java:S1186>"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Çµí‘8¸½ĞÅ².
+b
+java:S3252"FUse static access with "com.alibaba.fastjson.JSON" for "toJSONString".(šÂÚ8ÅªÚÅ².

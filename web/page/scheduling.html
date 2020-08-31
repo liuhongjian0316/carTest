@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>调度数据的填充</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+    <style>
+        .demo-input{padding-left: 10px; height: 38px; min-width: 200px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+    </style>
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;max-height: 100%">
+    <div class="layui-card">
+        <div class="layui-card">
+            <table class="layui-hide" id="demo" lay-filter="test"></table>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="titleTpl">
+    {{#  if(d.state == 0){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">未归还</a>
+    {{#  } else if(d.state == 1){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">已归还</a>
+    {{#  }  }}
+</script>
+<script type="text/html" id="titleTpl2">
+    {{#  if(d.runroute == null || d.runroute == ''){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">请填充数据</a>
+    {{#  } else{ }}
+    {{ d.runroute }}
+    {{#  }  }}
+</script>
+<script type="text/html" id="titleTpl3">
+    {{#  if(d.kmbefore == null || d.kmbefore == ''){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">请填充数据</a>
+    {{#  } else{ }}
+    {{ d.kmbefore }}千米
+    {{#  }  }}
+</script>
+<script type="text/html" id="titleTpl4">
+    {{#  if(d.kmafter == null || d.kmafter == ''){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">请填充数据</a>
+    {{#  } else{ }}
+    {{ d.kmafter }}千米
+    {{#  }  }}
+</script>
+<script type="text/html" id="titleTpl5">
+    {{#  if(d.toll == null || d.toll == ''){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">请填充数据</a>
+    {{#  } else{ }}
+    {{ d.toll }}元
+    {{#  }  }}
+</script>
+<script type="text/html" id="titleTpl6">
+    {{#  if(d.dispatchcommment == null || d.dispatchcommment == ''){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">请填充数据</a>
+    {{#  } else{ }}
+    {{ d.dispatchcommment }}
+    {{#  }  }}
+</script>
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script th:inline="none">
+    layui.config({
+        version: '1584613945938' //为了更新 js 缓存，可忽略
+    });
+
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function(){
+        var laydate = layui.laydate //日期
+            ,laypage = layui.laypage //分页
+            ,layer = layui.layer //弹层
+            ,table = layui.table //表格
+            ,form = layui.form //表单
+            ,carousel = layui.carousel //轮播
+            ,upload = layui.upload //上传
+            ,element = layui.element //元素操作
+            ,slider = layui.slider //滑块
+        //时间选择器
+        laydate.render({
+            elem:'#usingtime'
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem:'#actualtime'
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem:'#beintime'
+            ,type: 'datetime'
+        });
+
+        var session_name = null;
+        var session_id = null;
+        var session_departmentid = null;
+        var session_tel = null;
+        //获取sesson
+        $.ajax({
+            url: '/car/user/getsesson',
+            dataType: 'json',
+            type: 'get',
+            contentType: 'json',
+            async: false,
+            success: function (data) {
+                session_name = data[0].userName;
+                session_id = data[0].userinfoid;
+                session_departmentid = data[0].departName;
+                session_tel = data[0].tel;
+
+                //执行一个 table 实例
+                table.render({
+                    elem: '#demo'
+                    ,height: 420
+                    ,url: '/car/dispatch/returnMesAdminPage?departmentId='+data[0].departName  //数据接口
+                    ,title: '车辆信息表'
+                    ,page: true //开启分页
+                    ,totalRow: true //开启合计行
+                    ,cols: [[ //表头
+                        ,{field: 'dispatchid', title: 'ID', width:60, sort: true,fixed: 'left'}
+                        ,{field: 'drivername', title: '申请人', width:80, sort: true}
+                        ,{field: 'carNumber', title: '申请车牌号', width:105, sort: true}
+                        ,{field: 'actualtime', title: '开始时间', width:200, sort: true}
+                        ,{field: 'beintime', title: '入库时间', width:200, sort: true}
+                        ,{field: 'runroute', title: '行车路线', width:200, sort: true,templet: '#titleTpl2'}
+                        ,{field: 'kmbefore', title: '行车前的里程数', width:200, sort: true,templet: '#titleTpl3'}
+                        ,{field: 'kmafter', title: '行车后的里程数', width:200, sort: true,templet: '#titleTpl4'}
+                        ,{field: 'toll', title: '过路费', width:100, sort: true,templet: '#titleTpl5'}
+                        ,{field: 'dispatchcommment', title: '备注', width:100, sort: true,templet: '#titleTpl6'}
+                        ,{field: 'state', title: '状态', width:80, sort: true, fixed: 'right',templet: '#titleTpl'}
+                        ,{fixed: 'right', title:'操作',width: 165, align:'center', toolbar: '#barDemo'}
+                    ]]
+                });
+
+                //监听行工具事件
+                table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                    var data = obj.data //获得当前行数据
+                        ,layEvent = obj.event; //获得 lay-event 对应的值
+                    if(layEvent === 'del'){
+                        layer.confirm('真的删除这条数据吗', function(index){
+                            obj.del(); //删除对应行（tr）的DOM结构
+                            layer.close(index);
+                            var loginLoadIndex = layer.load(2);
+                            //向服务端发送删除指令
+                            $.ajax({
+                                type:'get',
+                                url:'/car/dispatch/delDispatch?dispatchid='+data.dispatchid,//写到这个借口了
+                                contentType:'application/json',
+                                dataType: 'json',
+                                success:function (data) {
+                                    if (data.status == "200") {
+                                        layer.msg('删除成功');
+                                        table.reload('demo', {
+                                            url: '/car/dispatch/returnMesAdminPage'
+                                            , where: {} //设定异步数据接口的额外参数
+                                        });
+                                        layer.closeAll();
+                                    }else{
+                                        layer.closeAll();
+                                        layer.close(loginLoadIndex);
+                                        layer.alert("删除失败");
+                                    }
+                                },
+                                error:function () {
+                                    layer.alert("网络不佳，数据获取不到");
+                                    layer.closeAll();
+                                }
+                            });
+                        });
+                    } else if(layEvent === 'edit'){
+                        //修改模态框赋值
+                        $.ajax({
+                            type:'get',
+                            url:'/car/dispatch/getDispatchById?dispatchid='+data.dispatchid,
+                            contentType:'application/json',
+                            dataType:'json',
+                            success:function (data) {
+                                //赋初始值
+                                form.val("editformdata",{
+                                    "dispatchid":data.data[0].dispatchid
+                                    ,"carNumber":data.data[0].carNumber
+                                    ,"driverlicensenumber":data.data[0].driverlicensenumber
+                                    ,"drivername":data.data[0].drivername
+                                    ,"usingtime":data.data[0].usingtime
+                                    ,"actualtime":data.data[0].actualtime
+                                    ,"applicationid":data.data[0].applicationid
+                                    ,"applicationnumber":data.data[0].applicationnumber
+                                    ,"runroute":data.data[0].runroute
+                                    ,"kmbefore":data.data[0].kmbefore
+                                    ,"kmafter":data.data[0].kmafter
+                                    ,"toll":data.data[0].toll
+                                    ,"beintime":data.data[0].beintime
+                                    ,"dispatchcommment":data.data[0].dispatchcommment
+                                });
+                            },
+                            error:function () {
+                                layer.alert("网络不佳，数据获取不到");
+                            }
+                        });
+                        //打开编辑模态框
+                        layer.open({
+                            type: 1,
+                            title: '编辑信息', //不显示标题栏
+                            closeBtn: 2,
+                            offset: '0px',
+                            area: ['826px','600px'],
+                            shade: 0.8,
+                            id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                            btn: ['保存','取消'],
+                            btnAlign: 'r',
+                            moveType: 1, //拖拽模式，0或者1
+                            content:$('.editPage'),
+                            yes: function (index, layero) {
+                                //触发提交按钮
+                                layero.find('form').find('a[lay-submit]').click();
+                                //修改按钮触发
+                                form.on('submit(EditformDemo)', function(data){
+                                    var loginLoadIndex = layer.load(2);
+                                    $.ajax({
+                                        type:'post',
+                                        url:'/car/dispatch/editDispatch',
+                                        dataType:'json',
+                                        data:JSON.stringify(data.field),
+                                        contentType:'application/json',
+                                        success:function (data) {
+                                            layer.close(loginLoadIndex);
+                                            if (data.status == "200"){
+                                                layer.msg('填充数据成功');
+                                                table.reload('demo', {
+                                                    url: '/car/dispatch/returnMesAdminPage'
+                                                    ,where: {} //设定异步数据接口的额外参数
+                                                });
+                                                layer.closeAll();
+                                            }else{
+                                                layer.close(loginLoadIndex);
+                                                layer.alert("填充数据失败");
+                                            }
+                                        },
+                                        error:function () {
+                                            layer.close(loginLoadIndex);
+                                            layer.alert("网络不佳，请稍后重试");
+                                        }
+                                    });
+                                });
+                            }
+                        });
+
+                    }
+                });
+
+
+                //自定义验证规则
+                form.verify({
+                    onlyNumber:[
+                        /^\d+$|^\d+[.]?\d+$/, '只能填写数字'
+                    ]
+                });
+
+
+            }
+        });
+    });
+</script>
+</body>
+<!--编辑模态框-->
+<div class="editPage" style="display: none">
+    <form class="layui-form" lay-filter="editformdata">
+        <input type="text" name="dispatchid" style="display: none">
+        <div class="layui-form-item">
+            <label class="layui-form-label">车牌号</label>
+            <div class="layui-input-block">
+                <input type="text" name="carNumber" required  lay-verify="required" placeholder="请输入车牌号" autocomplete="off" class="layui-input"  readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">驾驶证号</label>
+            <div class="layui-input-block">
+                <input type="text" name="driverlicensenumber" required  lay-verify="required" placeholder="请输入驾驶证号" autocomplete="off" class="layui-input"  readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="drivername" required  lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用车时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="usingtime" lay-verify="required" class="demo-input" placeholder="请选择时间" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">实际出车时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="actualtime" lay-verify="required" class="demo-input" placeholder="请选择时间"  readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请表编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="applicationid" required  lay-verify="required" placeholder="请输入申请表编号" autocomplete="off" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请人编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="applicationnumber" required  lay-verify="required" placeholder="请输入申请人编号" autocomplete="off" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">行车路线</label>
+            <div class="layui-input-block">
+                <input type="text" name="runroute" required  lay-verify="required" placeholder="请输入行车路线" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">行程前的里程数</label>
+            <div class="layui-input-block">
+                <input type="text" name="kmbefore" required  lay-verify="required|onlyNumber" placeholder="请输入里程数(单位：km)" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">行程后的里程数</label>
+            <div class="layui-input-block">
+                <input type="text" name="kmafter" required  lay-verify="required|onlyNumber" placeholder="请输入里程数(单位：km)" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">过路费</label>
+            <div class="layui-input-block">
+                <input type="text" name="toll" required  lay-verify="required|onlyNumber" placeholder="请输入数字（单位：元）" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">入库时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="beintime" lay-verify="required" class="demo-input" placeholder="请选择时间"  readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">调度备注</label>
+            <div class="layui-input-block">
+                <textarea type="text" name="dispatchcommment" placeholder="请输入备注信息" autocomplete="off" class="layui-input" style="height: 100px"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-input-block" style="display: none">
+                <a class="layui-btn" lay-submit lay-filter="EditformDemo" style="display: none">立即提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+<!--end-->
+</html>

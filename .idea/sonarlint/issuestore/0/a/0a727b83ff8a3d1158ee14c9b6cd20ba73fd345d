@@ -1,0 +1,17 @@
+
+]	java:S125F"<This block of commented-out lines of code should be removed.(§÷ÇÏùÿÿÿÿ8¯ü™èÃ.
+l
+java:S2095Ò"IUse try-with-resources or close this "PrintWriter" in a "finally" clause.(æ¢™úÿÿÿÿ8ŒêÈÃ.
+j
+java:S1858?"H"getUserAccount" returns a string, there's no need to call "toString()".(õĞ‰úÿÿÿÿ8¯ü™èÃ.
+`
+java:S1155>">Use isEmpty() to check whether the collection is empty or not.(­¢Í’ÿÿÿÿÿ8ŒêÈÃ.
+”
+java:S1130Â"vRemove the declaration of thrown exception 'org.quartz.SchedulerException', as it cannot be thrown from method's body.(úÉ¡Ï8€ëÖéÃ.
+c
+java:S2259Ø"@A "NullPointerException" could be thrown; "fw" is nullable here.(¯¡½ãıÿÿÿÿ8ŒêÈÃ.
+Y	java:S125Í"<This block of commented-out lines of code should be removed.(±û´†8¯ü™èÃ.
+W	java:S125B"<This block of commented-out lines of code should be removed.(´ ¦o8¯ü™èÃ.
+^	java:S125Æ"<This block of commented-out lines of code should be removed.(¨øŒ”üÿÿÿÿ8¯ü™èÃ.
+N
+java:S1135 "2Complete the task associated to this TODO comment.(£°§\8¯ü™èÃ.

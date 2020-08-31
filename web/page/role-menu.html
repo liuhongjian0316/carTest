@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>角色-菜单</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;max-height: 100%">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs">数据列表</i> <i style="float: right;"></i>
+        </div>
+        <div id="tree"></div>
+    </div>
+</div>
+<script type="text/html" id="barDemo">
+    {{#  if(d.pid == 0){ }}
+    <a class="layui-btn layui-btn-xs" lay-event="add">添加</a>
+    {{#  } }}
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script src="/car/static/layui/treeTable.js"></script>
+<script>
+    layui.config({
+        version: '1584613945938' ,//为了更新 js 缓存，可忽略
+        base: '/car/static/layui'
+    }).extend({
+        treeTable: '/treetable'
+    });
+
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider','tree',"treeTable"], function(){
+        var laydate = layui.laydate //日期
+            ,laypage = layui.laypage //分页
+            ,layer = layui.layer //弹层
+            ,table = layui.table //表格
+            ,form = layui.form //表单
+            ,carousel = layui.carousel //轮播
+            ,upload = layui.upload //上传
+            ,element = layui.element //元素操作
+            ,slider = layui.slider //滑块
+            ,tree = layui.tree
+            ,treeTable = layui.treeTable;
+
+
+        // 渲染树形表格
+        var insTb = treeTable.render({
+            elem: '#tree',
+            url:'/car/menu/showMenuList',
+            tree: {
+                iconIndex: 3,           // 折叠图标显示在第几列
+                isPidData: true,        // 是否是id、pid形式数据
+                idName: 'mid',  // id字段名称
+                pidName: 'pid'     // pid字段名称
+            },
+            cols: [[
+                {type: 'numbers'},
+                {field: 'id', title: 'ID'},
+                {field: 'mid', title: '子菜单'},
+                {field: 'name', title: '名称'},
+                {field: 'url', title: '路径'},
+                {field: 'pid', title: '父菜单'},
+                {fixed: 'right', title:'操作',width: 165, align:'center', toolbar: '#barDemo'}
+            ]],
+        });
+        //监听行工具事件
+        treeTable.on('tool(tree)', function(obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent === 'add') {
+                layer.open({
+                    type: 1,
+                    title: '增加菜单', //不显示标题栏
+                    closeBtn: 2,
+                    offset: '10px',
+                    area: ['820px','585px'],
+                    shade: 0.8,
+                    id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                    btn: ['保存','取消'],
+                    btnAlign: 'r',
+                    moveType: 1, //拖拽模式，0或者1
+                    content:$('.addPage'),
+                    yes: function (index, layero) {
+                        //触发提交按钮
+                        layero.find('form').find('a[lay-submit]').click();
+                        //修改按钮触发
+                        form.on('submit(AddformDemo)', function(data){
+                            var loginLoadIndex = layer.load(2);
+                            $.ajax({
+                                type:'post',
+                                url:'/car/menu/add',
+                                dataType:'json',
+                                data:JSON.stringify(data.field),
+                                contentType:'application/json',
+                                success:function (data) {
+                                    layer.close(loginLoadIndex);
+                                    if (data.status == "200"){
+                                        layer.msg('添加成功');
+                                        insTb.refresh();
+                                        layer.closeAll();
+                                    }else{
+                                        layer.close(loginLoadIndex);
+                                        layer.alert("添加失败");
+                                        $('#loginBtn').val("立即提交");
+                                    }
+                                },
+                                error:function () {
+                                    layer.close(loginLoadIndex);
+                                    layer.alert("网络不佳，请稍后重试");
+                                    $('#formDemo').val("正在添加...");
+                                }
+                            });
+                        });
+                    }
+                });
+            } else if (layEvent === 'edit') {
+                //修改模态框赋值
+                $.ajax({
+                    type:'get',
+                    url:'/car/menu/getById?id='+data.id,
+                    dataType:'json',
+                    async: false,
+                    contentType:'application/json',
+                    success:function (data) {
+                        //赋初始值
+                        form.val("Editformdata",{
+                            "id":data.data[0].id
+                            ,"mid":data.data[0].mid
+                            ,"name":data.data[0].name
+                            ,"url":data.data[0].url
+                            ,"pid":data.data[0].pid
+                        });
+                    },
+                    error:function () {
+                        layer.alert("网络不佳，数据获取不到");
+                    }
+                });
+                //打开编辑模态框
+                layer.open({
+                    type: 1,
+                    title: '编辑信息', //不显示标题栏
+                    closeBtn: 2,
+                    offset: '10px',
+                    area: ['820px','585px'],
+                    shade: 0.8,
+                    id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                    btn: ['保存','取消'],
+                    btnAlign: 'r',
+                    moveType: 1, //拖拽模式，0或者1
+                    content:$('.editPage'),
+                    yes: function (index, layero) {
+                        //触发提交按钮
+                        layero.find('form').find('a[lay-submit]').click();
+                        //修改按钮触发
+                        form.on('submit(EditformDemo)', function(data){
+                            var loginLoadIndex = layer.load(2);
+                            $.ajax({
+                                type:'post',
+                                url:'/car/menu/edit',
+                                dataType:'json',
+                                data:JSON.stringify(data.field),
+                                contentType:'application/json',
+                                success:function (data) {
+                                    layer.close(loginLoadIndex);
+                                    if (data.status == "200"){
+                                        insTb.refresh();
+                                        layer.closeAll();
+                                    }else{
+                                        layer.close(loginLoadIndex);
+                                        layer.alert("修改失败");
+                                        $('#loginBtn').val("立即提交");
+                                    }
+                                },
+                                error:function () {
+                                    layer.close(loginLoadIndex);
+                                    layer.alert("网络不佳，请稍后重试");
+                                    $('#formDemo').val("正在添加...");
+                                }
+                            });
+                        });
+                    }
+                });
+            } else if(layEvent === 'del'){
+                var loginLoadIndex = layer.load(2);
+                $.ajax({
+                    type:'get',
+                    url:'/car/menu/delete?id='+data.id,
+                    dataType:'json',
+                    contentType:'application/json',
+                    success:function (data) {
+                        layer.close(loginLoadIndex);
+                        if (data.status == "200"){
+                            insTb.refresh();
+                            layer.closeAll();
+                        }else{
+                            layer.close(loginLoadIndex);
+                            layer.alert("删除失败");
+                            $('#loginBtn').val("立即提交");
+                        }
+                    },
+                    error:function () {
+                        layer.close(loginLoadIndex);
+                        layer.alert("网络不佳，请稍后重试");
+                        $('#formDemo').val("正在添加...");
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+<div class="addPage" style="display: none">
+    <form class="layui-form" lay-filter="Addformdata">
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">mid(菜单id)</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="mid" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" id="mid">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">name</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" id="name">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">url(一级菜单没有)</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="url"  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" id="url">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">pid(一级菜单0)</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="pid" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" id="pid">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-input-block" style="display: none">
+                <a class="layui-btn" lay-submit lay-filter="AddformDemo" style="display: none">立即提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="editPage" style="display: none">
+    <form class="layui-form" lay-filter="Editformdata">
+        <input type="text" name="id" style="display: none">
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">mid(菜单id)</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="mid" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" id="mid2">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">name</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" id="name2">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">url(一级菜单没有)</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="url" required   placeholder="请输入" autocomplete="off" class="layui-input" id="url2">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">pid(一级菜单0)</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="pid" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" id="pid2">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-input-block" style="display: none">
+                <a class="layui-btn" lay-submit lay-filter="EditformDemo" style="display: none">立即提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/car/static/mystyle/js/particles/style.css">
+    <link rel="stylesheet" href="/car/static/mystyle/css/login.css">
+</head>
+<body>
+<!--例子插件-->
+<script src="/car/static/mystyle/js/particles/particles.js"></script>
+<script src="/car/static/mystyle/js/particles/app.js"></script>
+<!--end-->
+<div class="wrap">
+    <div id="particles-js">
+        <div class="loginForm">
+            <form>
+                <div class="logoHead">
+                    公务用车管理系统
+                </div>
+                <div class="usernameWrapDiv">
+                    <div class="usernameLabel">
+                        <label>用户名:</label>
+                    </div>
+                    <div class="usernameDiv">
+                        <i class="layui-icon layui-icon-username adminIcon"></i>
+                        <input id="loginUsername" class="layui-input adminInput" type="text" name="username" placeholder="输入用户名" >
+                    </div>
+                </div>
+                <div class="usernameWrapDiv">
+                    <div class="usernameLabel">
+                        <label>密码:</label>
+                    </div>
+                    <div class="passwordDiv">
+                        <i class="layui-icon layui-icon-password adminIcon"></i>
+                        <input id="loginPassword" class="layui-input adminInput" type="password" name="password" placeholder="输入密码">
+                    </div>
+                </div>
+                <div class="usernameWrapDiv">
+                    <div class="usernameLabel">
+                        <label>验证码:</label>
+                    </div>
+                    <div class="cardDiv">
+                        <input id="loginCard" class="layui-input cardInput" type="text" name="card" placeholder="输入验证码">
+                    </div>
+                    <div class="codeDiv">
+                        <input id="loginCode" class="layui-input codeInput"  type="button">
+                    </div>
+                </div>
+                <div class="usernameWrapDiv">
+                    <div class="submitLabel">
+                        <label>没有账号？<a>联系管理员</a></label>
+                    </div>
+                    <div class="submitDiv">
+                        <input id="loginBtn" type="button" class="submit layui-btn layui-btn-primary" value="登录"></input>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</div>
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script>
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function(){
+        var laydate = layui.laydate //日期
+            ,laypage = layui.laypage //分页
+            ,layer = layui.layer //弹层
+            ,table = layui.table //表格
+            ,form = layui.form //表单
+            ,carousel = layui.carousel //轮播
+            ,upload = layui.upload //上传
+            ,element = layui.element //元素操作
+            ,slider = layui.slider //滑块
+        //下拉框初始化(部门)
+        $.ajax({
+            url: '/car/deaprt/pidName',
+            dataType: 'json',
+            type: 'post',
+            contentType:'json',
+            success: function (data) {
+                $.each(data.data, function (index, item) {
+                    $('#departName').append(new Option(item.departName, item.departId));// 下拉菜单里添加元素
+                });
+                layui.form.render("select");
+            }
+        })
+        //自定义验证规则
+        //自定义验证规则
+        form.verify({
+            checkAccount:function () {
+                var userAccount = $('#userAccount').val();
+                var flag = false;
+                $.ajax({
+                    type:'get',
+                    url:'/car/user/checkAccount?userAccount='+userAccount,
+                    dataType:'json',
+                    async: false,
+                    contentType:'application/json',
+                    success:function (data) {
+                        flag = data.data;
+                        if (data.data == true){
+                            $("#tishi").html("账号重复");
+                            $("#tishi").css({color:"red"});
+                        }else{
+                            $("#tishi").html("账号可用");
+                            $("#tishi").css({color:"green"});
+                        }
+                    }
+                });
+                if(flag){
+                    return "账号已存在";
+                }
+            },
+            checkName:function () {
+                var userName = $('#userName').val();
+                var flag = false;
+                $.ajax({
+                    type:'get',
+                    url:'/car/user/checkName?userName='+userName,
+                    dataType:'json',
+                    async: false,
+                    contentType:'application/json',
+                    success:function (data) {
+                        flag = data.data;
+                        if (data.data == true){
+                            $("#tishi2").html("姓名存在");
+                            $("#tishi2").css({color:"red"});
+                        }else{
+                            $("#tishi2").html("姓名可用");
+                            $("#tishi2").css({color:"green"});
+                        }
+                    }
+                });
+                if(flag){
+                    return "姓名已存在";
+                }
+            },
+            checkTel:function () {
+                var tel = $('#tel').val();
+                var flag = false;
+                $.ajax({
+                    type:'get',
+                    url:'/car/user/checkTel?tel='+tel,
+                    dataType:'json',
+                    async: false,
+                    contentType:'application/json',
+                    success:function (data) {
+                        flag = data.data;
+                        if (data.data == true){
+                            $("#tishi3").html("手机号已存在");
+                            $("#tishi3").css({color:"red"});
+                        }else{
+                            $("#tishi3").html("手机号可用");
+                            $("#tishi3").css({color:"green"});
+                        }
+                    }
+                });
+                if(flag){
+                    return "手机号已存在";
+                }
+            },
+            tel:[
+                /^1[3456789]\d{9}$/,'请输入正确的手机号'
+            ],
+            userName:[
+                /^[\u4E00-\u9FA5A-Za-z]+$/,'只能输入中文或英文'
+            ],
+            userAccount:[
+                /^[a-zA-Z0-9_-]{4,16}$/,'4到16位（字母，数字，下划线，减号）'
+            ],
+            pwd:[
+                /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/,'最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符  '
+            ]
+        });
+        $(function () {
+            // 页面初始化生成验证码
+            window.onload = createCode('#loginCode');
+            // 验证码切换
+            $('#loginCode').click(function () {
+                createCode('#loginCode');
+            });
+            // 登陆事件
+            $('#loginBtn').click(function () {
+                login();
+            });
+            // 注册事件
+            $('#loginRegister').click(function () {
+                register();
+            });
+        });
+        // 生成验证码
+        function createCode(codeID) {
+            var code = "";
+            // 验证码长度
+            var codeLength = 4;
+            // 验证码dom元素
+            var checkCode = $(codeID);
+            // 验证码随机数
+            var random = [0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R',
+                'S','T','U','V','W','X','Y','Z'];
+            for (var i = 0;i < codeLength; i++){
+                // 随机数索引
+                var index = Math.floor(Math.random()*36);
+                code += random[index];
+            }
+            // 将生成的随机验证码赋值
+            checkCode.val(code);
+        }
+        // 校验验证码、用户名、密码
+        function validateCode(inputID,codeID) {
+            var inputCode = $(inputID).val().toUpperCase();
+            var cardCode = $(codeID).val();
+            var loginUsername = $('#loginUsername').val();
+            var loginPassword = $('#loginPassword').val();
+            if ($.trim(loginUsername) == '' || $.trim(loginUsername).length<=0){
+                layer.alert("用户名不能为空");
+                return false;
+            }
+            if ($.trim(loginPassword) == '' || $.trim(loginPassword).length<=0){
+                layer.alert("密码不能为空");
+                return false;
+            }
+            if (inputCode.length<=0){
+                layer.alert("验证码不能为空");
+                return false;
+            }
+            if (inputCode != cardCode){
+                layer.alert("请输入正确验证码");
+                return false;
+            }
+            return true;
+        }
+        // 登录流程
+        function login() {
+            if (!validateCode('#loginCard','#loginCode')){
+                //阻断提示
+            }else {
+                var loginUsername = $('#loginUsername').val();
+                var loginPassword = $('#loginPassword').val();
+                var user = {};
+                user.userAccount = loginUsername;
+                user.pwd = loginPassword;
+                var loginLoadIndex = layer.load(2);
+                $('#loginBtn').val("正在登录...");
+                $.ajax({
+                    type:'post',
+                    url:window.location.protocol+'//'+window.location.host+'/car/login',
+                    dataType:'json',
+                    data:JSON.stringify(user),
+                    contentType:'application/json',
+                    success:function (data) {
+                        layer.close(loginLoadIndex);
+                        if (data.status == 200){
+                            window.location.href = 'http://localhost:8888/car/page/index.html';
+                        }else{
+                            layer.close(loginLoadIndex);
+                            layer.alert("账号或密码错误");
+                            $('#loginBtn').val("登录");
+                        }
+                    },
+                    error:function () {
+                        layer.close(loginLoadIndex);
+                        layer.alert("登录超时");
+                        $('#loginBtn').val("登录");
+                    }
+                });
+            }
+
+        }
+        // 注册流程
+        function register() {
+            //打开添加模态框
+            layer.open({
+                type: 1,
+                title: '添加信息', //不显示标题栏
+                closeBtn: 2,
+                offset: '0px',
+                area: ['826px','600px'],
+                shade: 0.8,
+                id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                btn: ['保存', '重置','取消'],
+                btnAlign: 'r',
+                moveType: 1, //拖拽模式，0或者1
+                content:$('.addPage'),
+                yes: function (index, layero) {
+                    //触发提交按钮
+                    layero.find('form').find('a[lay-submit]').click();
+                    //添加按钮触发
+                    form.on('submit(AddformDemo)', function(data){
+                        var loginLoadIndex = layer.load(2);
+                        $.ajax({
+                            type:'post',
+                            url:'/car/user/addUser',
+                            dataType:'json',
+                            data:JSON.stringify(data.field),
+                            contentType:'application/json',
+                            success:function (data) {
+                                layer.close(loginLoadIndex);
+                                if (data.status == "200"){
+                                    layer.msg('注册成功');
+                                    layer.close(index);
+
+                                }else{
+                                    layer.close(loginLoadIndex);
+                                    layer.alert("注册失败");
+                                }
+                            },
+                            error:function () {
+                                layer.close(loginLoadIndex);
+                                layer.alert("网络不佳，请稍后重试");
+                            }
+                        });
+                    });
+                },
+                btn2:function (index,layero) {
+                    //触发重置按钮
+                    layero.find('form').find('button').click();
+
+                    return false;
+                },
+                btn3:function (index,layero) {
+                    //取消
+                }
+            });
+        }
+    })
+</script>
+</body>
+<!--添加模态框-->
+<div class="addPage" style="display: none">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="userAccount" required  lay-verify="checkAccount|userAccount|required" placeholder="请输入账号" autocomplete="off" class="layui-input" id="userAccount">
+                <span id="tishi"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="userName" required  lay-verify="checkName|userName|required" placeholder="请输入姓名" autocomplete="off" class="layui-input" id="userName">
+                <span id="tishi2"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="pwd" required  lay-verify="required|pwd" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <select name="sex" lay-verify="required">
+                    <option value=""></option>
+                    <option value="0">男</option>
+                    <option value="1">女</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号</label>
+            <div class="layui-input-block">
+                <input type="text" name="tel" required  lay-verify="tel|required|checkTel" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+                <span id="tishi3"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="addr" required  lay-verify="required" placeholder="请输入地址" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">部门</label>
+            <div class="layui-input-block">
+                <select name="departName" lay-verify="required" id="departName">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-block">
+                <select name="roleid" lay-verify="required">
+                    <option value=""></option>
+                    <option value="2">普通用户</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-input-block" style="display: none">
+                <a class="layui-btn" lay-submit lay-filter="AddformDemo" style="display: none">立即提交</a>
+                <button type="reset" class="layui-btn layui-btn-primary" style="display: none" >重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--end-->
+</html>

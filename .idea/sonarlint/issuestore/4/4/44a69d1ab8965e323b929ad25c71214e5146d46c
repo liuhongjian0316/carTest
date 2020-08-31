@@ -1,0 +1,10 @@
+
+\
+java:S1118":Add a private constructor to hide the implicit public one.(±ìüÁùÿÿÿÿ8éôè¹µ.
+K
+java:S18748".Remove this use of "create"; it is deprecated.(­±ÌÙ8µ‚òµµ.
+O
+java:S14817"2Remove this unused "indexResponse" local variable.( •8èÅëµµ.
+Y
+java:S2589&"7Remove this expression which always evaluates to "true"(ó˜¯ıÿÿÿÿ8ªÄÛµµ.
+n	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(±ìüÁùÿÿÿÿ8ªÄÛµµ.

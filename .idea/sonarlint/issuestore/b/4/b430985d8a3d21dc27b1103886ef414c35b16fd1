@@ -1,0 +1,8 @@
+
+R	java:S107""=Method has 10 parameters, which is greater than 7 authorized.(Í¼²ˆ
+R
+java:S1128"7Remove this unused import 'work.aijiu.entity.Approver'.(–ıñØûÿÿÿÿ
+c	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(õ…©ë
+o	java:S100 "NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¦ˆÃÁüÿÿÿÿ8øó¾µ.
+R	java:S1071"=Method has 12 parameters, which is greater than 7 authorized.(ºÉÍ¬
+W	java:S107*"=Method has 11 parameters, which is greater than 7 authorized.(¨‡ë‚øÿÿÿÿ

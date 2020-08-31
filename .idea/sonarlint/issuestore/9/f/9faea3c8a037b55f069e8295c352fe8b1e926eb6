@@ -1,0 +1,26 @@
+
+P
+java:S1135‡"2Complete the task associated to this TODO comment.(ÉÚõÎ8½†…µ.
+l
+java:S1128"JRemove this unused import 'org.elasticsearch.action.delete.DeleteRequest'.(Æ·¶½úÿÿÿÿ8Ş±êŒµ.
+K
+java:S1481*")Remove this unused "node" local variable.(®Åˆ¢ûÿÿÿÿ8üŠ©µ.
+\
+java:S1854,":Remove this useless assignment to local variable "scheme".(È¾¨»úÿÿÿÿ8µˆùµµ.
+f
+java:S1128!"DRemove this unused import 'work.aijiu.service.impl.UserServiceImpl'.(š·‹’ùÿÿÿÿ8º¾ıµµ.
+r	java:S1170"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŒúÏ°ÿÿÿÿÿ8£÷µµ.
+E
+java:S1481+")Remove this unused "port" local variable.(Å­ßP8üŠ©µ.
+T
+java:S1854+"8Remove this useless assignment to local variable "port".(Å­ßP8µˆùµµ.
+X
+java:S1128 ";Remove this unused import 'work.aijiu.service.UserService'.(¡¤øö8º¾ıµµ.
+U
+java:S1128"3Remove this unused import 'work.aijiu.dao.UserDao'.(µœ˜ÿúÿÿÿÿ8ó˜ê©µ.
+M
+java:S1481,"+Remove this unused "scheme" local variable.(È¾¨»úÿÿÿÿ8üŠ©µ.
+j
+java:S1128"HRemove this unused import 'work.aijiu.common.utils.SpringContextHolder'.(…Üêùÿÿÿÿ8ó˜ê©µ.
+Z
+java:S1854*"8Remove this useless assignment to local variable "node".(®Åˆ¢ûÿÿÿÿ8µˆùµµ.

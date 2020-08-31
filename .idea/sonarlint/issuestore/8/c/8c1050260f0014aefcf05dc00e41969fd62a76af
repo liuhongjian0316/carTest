@@ -1,0 +1,33 @@
+
+R
+java:S1128"5Remove this unused import 'org.apache.http.HttpHost'.(õÑ‰¯8—‹ê¹µ.
+_
+java:S1128"=Remove this unused import 'work.aijiu.common.utils.EllConst'.(‡ˆÑÂıÿÿÿÿ8—‹ê¹µ.
+E
+java:S14817"(Remove this unused "out" local variable.(¾šçŞ8ŒÀ“¶µ.
+m
+java:S1989""PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8Øãƒµ.
+g
+java:S1989("JHandle the following exception that could be thrown by "get": IOException.(ÜéµÎ8¯ÒÌºµ.
+R
+java:S1128"6Remove this unused import 'com.alibaba.fastjson.JSON'.(Ö¢å$8ÕÇÜºµ.
+m
+java:S1128
+"KRemove this unused import 'org.elasticsearch.action.search.SearchResponse'.(¿å‡ùÿÿÿÿ8Ï¦¹»µ.
+\
+java:S1128"@Remove this unused import 'org.elasticsearch.client.RestClient'.(ìşÇT8—‹ê¹µ.
+…
+java:S19895"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8ŒÀ“¶µ.
+…
+java:S1989 "cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8Øãƒµ.
+a
+java:S1128"?Remove this unused import 'org.elasticsearch.search.SearchHit'.(š¶µüÿÿÿÿ8Ï¦¹»µ.
+]
+java:S1128"@Remove this unused import 'org.elasticsearch.search.SearchHits'.(Ğ¹—8Ï¦¹»µ.
+z
+java:S1128"^Remove this unused import 'org.elasticsearch.action.admin.indices.create.CreateIndexResponse'.(è×±b8„áÕ¹µ.
+m
+java:S19897"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8ŒÀ“¶µ.
+g
+java:S1128	"JRemove this unused import 'org.elasticsearch.action.search.SearchRequest'.(ßÄƒ–8Ï¦¹»µ.
+Z	java:S106)"9Replace this use of System.out or System.err by a logger.(ÏøÎëıÿÿÿÿ8†›Ûÿ½.

@@ -1,0 +1,56 @@
+
+Q
+java:S1128"4Remove this unused import 'work.aijiu.VO.CarinfoVO'.(Âó±â8—£ÍÛµ.
+]
+java:S1128";Remove this unused import 'com.alibaba.fastjson.JSONArray'.(ÿÀâ³ùÿÿÿÿ8Ùê«ì².
+K
+java:S1874*"/Remove this use of "Integer"; it is deprecated.(•ÏÿA8ÖÙûÃ.
+m
+java:S1989w"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8ÖÙûÃ.
+W
+java:S4719«"9Replace charset name argument with StandardCharsets.UTF_8(š­‘ª8ÖÙûÃ.
+z
+java:S2226"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(¡»Âëüÿÿÿÿ8ÖÙûÃ.
+…
+java:S1989u"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8ÖÙûÃ.
+Q
+java:S1874_"/Remove this use of "Integer"; it is deprecated.(¹ğ¤‘úÿÿÿÿ8ÖÙûÃ.
+Q
+java:S1874_"/Remove this use of "Integer"; it is deprecated.(¹ğ¤‘úÿÿÿÿ8ÖÙûÃ.
+†
+java:S1989|"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(¥¨Áéÿÿÿÿÿ8ÖÙûÃ.
+‡
+java:S1989”"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(¥¨Áéÿÿÿÿÿ8ÖÙûÃ.
+u
+java:S1128"SRemove this unused import 'org.springframework.beans.factory.annotation.Autowired'.(¡¸Îùÿÿÿÿ8ñÏ¯³.
+Q
+java:S1068"4Remove this unused "carinfoVOService" private field.(¿ˆ¥Á8ÖÙûÃ.
+T
+java:S1128
+"8Remove this unused import 'work.aijiu.dao.CarinfoVODao'.(ü”·
+8ƒ“ÕÔµ.
+u
+java:S2226"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(¿ˆ¥Á8ïÉûÃ.
+z
+java:S2226"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(…âÔêüÿÿÿÿ8ïÉûÃ.
+u
+java:S2226 "XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(ˆøëÈ8ßÈûÃ.
+z
+java:S2226!"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(×æ±úÿÿÿÿ8ïÉûÃ.
+s
+java:S1128"QRemove this unused import 'org.springframework.web.bind.annotation.RequestParam'.(Â¬À·ùÿÿÿÿ8ÍŞáæ².
+…
+java:S1989&"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8ÖÙûÃ.
+‚
+java:S1989Í"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(³Ôñ¥8ÖÙûÃ.
+m
+java:S1989("PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8ÖÙûÃ.
+L
+java:S1874V"/Remove this use of "Integer"; it is deprecated.(½äÁí8ÖÙûÃ.
+^	java:S107˜"<Method has 8 parameters, which is greater than 7 authorized.(”ÃàÅúÿÿÿÿ8ÖÙûÃ.
+o
+java:S3776$"RRefactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.(¹Â·Š8ÖÙûÃ.
+L
+java:S1874V"/Remove this use of "Integer"; it is deprecated.(½äÁí8ÖÙûÃ.
+K
+java:S1874*"/Remove this use of "Integer"; it is deprecated.(•ÏÿA8ÖÙûÃ.

@@ -1,0 +1,14 @@
+
+U
+java:S1191"5Use classes from the Java API instead of Sun classes.(ŒÄœ”ıÿÿÿÿ8ÂÁ‚¤Ã.
+e	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(ô¯ñûÿÿÿÿ8ÂÁ‚¤Ã.
+
+java:S1488"fImmediately return this expression instead of assigning it to the temporary variable "percentCpuLoad".(ÎÀ Ÿ8ÂÁ‚¤Ã.
+„
+java:S1488"iImmediately return this expression instead of assigning it to the temporary variable "percentMemoryLoad".(ËúŸ’8ÂÁ‚¤Ã.
+ƒ
+java:S1989"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8ÂÁ‚¤Ã.
+k
+java:S1989"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8ÂÁ‚¤Ã.
+v
+java:S1989"VHandle the following exception that could be thrown by "getProcessCpuLoad": Exception.(ØŠæõıÿÿÿÿ8ÂÁ‚¤Ã.

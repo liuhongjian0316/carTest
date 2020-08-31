@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>申请用车</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+    <style>
+        .demo-input{padding-left: 10px; height: 38px; min-width: 200px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+    </style>
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;">
+    <form class="layui-form"  lay-filter="formdata">
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请人编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="applicationNumber" required  lay-verify="required" placeholder="请输入申请人编号" autocomplete="off" class="layui-input"  readonly="readonly" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请人姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="applicationName" required  lay-verify="required" placeholder="请输入申请人姓名" autocomplete="off" class="layui-input"  readonly="readonly">
+            </div>
+        </div>
+        <input type="hidden" name="departmentId" required  lay-verify="required" placeholder="请输入申请人部门" autocomplete="off" class="layui-input">
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系电话</label>
+            <div class="layui-input-block">
+                <input type="text" name="tel" required  lay-verify="phone|required" placeholder="请输入联系电话" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">出车时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="leaveTime" lay-verify="required" class="demo-input" placeholder="请选择时间" id="leaveTime">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">返回时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="returnTime" lay-verify="required" class="demo-input" placeholder="请选择时间" id="returnTime">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">目的地</label>
+            <div class="layui-input-block">
+                <input type="text" name="destination" required  lay-verify="required" placeholder="请输入目的地" autocomplete="off" class="layui-input" id="1">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用车原因</label>
+            <div class="layui-input-block">
+                <textarea type="text" name="reason" required  lay-verify="required" placeholder="请输入用车原因" autocomplete="off" class="layui-textarea" id="2"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea name="approverComment" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a class="layui-btn" lay-submit lay-filter="formDemo" id="sub">立即提交</a>
+                <a class="layui-btn" lay-submit lay-filter="formDemo2" id="save">保存草稿</a> <span style="color: red">(注意：草稿只会存储7天)</span>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script>
+    layui.use(['layer','jquery','element','form','laypage','laydate','table'], function(){
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        var element = layui.element;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var laypage = layui.laypage;
+        form.render();
+        var laydate = layui.laydate;
+        var table = layui.table;
+        laydate.render({
+            elem:'#leaveTime'
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem:'#returnTime'
+            ,type: 'datetime'
+        });
+        var session_name = null;
+        var session_id = null;
+        var session_departmentid = null;
+        var session_tel = null;
+        //获取sesson
+        $.ajax({
+            url: '/car/user/getsesson',
+            dataType: 'json',
+            type: 'get',
+            contentType:'json',
+            success: function (data) {
+                session_name = data[0].userName;
+                session_id = data[0].userinfoid;
+                session_departmentid = data[0].departName;
+                session_tel = data[0].tel;
+                form.val("formdata",{
+                    "applicationNumber":session_id
+                    ,"applicationName":session_name
+                    ,"departmentId" :session_departmentid
+                    ,"tel" :session_tel
+                });
+                $.ajax({
+                    url: '/car/approver/getredis?name='+ session_name,
+                    dataType: 'json',
+                    type: 'get',
+                    contentType:'json',
+                    success: function (data) {
+                        form.val("formdata",{
+                            "leaveTime": data.leaveTime
+                            ,"returnTime":data.returnTime
+                            ,"destination":data.destination
+                            ,"reason":data.reason
+                            ,"approverComment":data.approverComment
+                        });
+                    }
+                });
+            }
+        });
+
+        //提交按钮
+        $("#sub").click(function () {
+            if($("#leaveTime").attr("lay-verify") === undefined ){
+                $("#leaveTime").attr("lay-verify","required");
+            }
+            if($("#returnTime").attr("lay-verify") === undefined){
+                $("#returnTime").attr("lay-verify","required");
+            }
+            if($("#1").attr("lay-verify") === undefined){
+                $("#1").attr("lay-verify","required");
+            }
+            if($("#2").attr("lay-verify") === undefined){
+                $("#2").attr("lay-verify","required");
+            }
+            form.on('submit(formDemo)', function(data){
+                var loginLoadIndex = layer.load(2);
+                $.ajax({
+                    type:'post',
+                    url:'/car/approver/toapplyfor',
+                    dataType:'json',
+                    data:JSON.stringify(data.field),
+                    contentType:'application/json',
+                    success:function (data) {
+                        layer.close(loginLoadIndex);
+                        if (data.status == "200"){
+                            layer.msg("申请成功");
+                        }else{
+                            layer.close(loginLoadIndex);
+                            layer.alert("申请失败！！请检查自己的数据是否输入错误！！");
+                        }
+                    },
+                    error:function () {
+                        layer.close(loginLoadIndex);
+                        layer.alert("您的网络不好，请稍后重试");
+                    }
+                });
+            });
+        })
+        //提交按钮
+        $("#save").click(function () {
+            $("#leaveTime").removeAttr("lay-verify");
+            $("#returnTime").removeAttr("lay-verify");
+            $("#1").removeAttr("lay-verify");
+            $("#2").removeAttr("lay-verify");
+            form.on('submit(formDemo2)', function(data){
+                var loginLoadIndex = layer.load(2);
+                //去除出车时间，返回时间，目的地，用车原因，备注的前端校验
+                //可以去除属性
+                $.ajax({
+                    type:'post',
+                    url:'/car/approver/savetoRedis',
+                    dataType:'json',
+                    data:JSON.stringify(data.field),
+                    contentType:'application/json',
+                    success:function (data) {
+                        layer.close(loginLoadIndex);
+                        if (data.status == "200" && data.data == true){
+                            layer.msg("存储成功");
+                        }else{
+                            layer.close(loginLoadIndex);
+                            layer.alert("存储失败");
+                        }
+                    },
+                    error:function () {
+                        layer.close(loginLoadIndex);
+                        layer.alert("您的网络不好，请稍后重试");
+                    }
+                });
+            });
+        });
+    })
+
+</script>
+</body>
+</html>

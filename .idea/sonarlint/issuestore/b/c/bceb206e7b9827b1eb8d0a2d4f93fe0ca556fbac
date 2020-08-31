@@ -1,0 +1,34 @@
+
+8javascript:S1116"Unnecessary semicolon.(ôŸìúÿÿÿÿ
+Mjavascript:S1117¢"+'h' is already declared in the upper scope.(§½Ñ×şÿÿÿÿ
+wjavascript:S128Î"VEnd this switch case with an unconditional break, continue, return or throw statement.(ãÃ¥Øúÿÿÿÿ
+Mjavascript:S1117û"+'i' is already declared in the upper scope.(ŠËªïüÿÿÿÿ
+Pjavascript:S1854©"3Remove this useless assignment to variable "month".(ôèÈÂ
+{javascript:S2703ë"YAdd the "let", "const" or "var" keyword to this declaration of "obj" to make it explicit.(¤ª©µúÿÿÿÿ
+Njavascript:S1481¥"2Remove the declaration of the unused 'e' variable.(•ô¤
+Ljavascript:S1117½"/'timer' is already declared in the upper scope.(œõ‡¦
+Sjavascript:S1854·"6Remove this useless assignment to variable "scroller".(º§¾
+4javascript:S2814Æ"'i' is already defined.(Ş¼Ş¢
+Qjavascript:S1117¦"/'input' is already declared in the upper scope.(’ô”¼øÿÿÿÿ
+Njavascript:S1854˜"1Remove this useless assignment to variable "val".(±¾…Û
+Sjavascript:S1481©"6Remove the declaration of the unused 'month' variable.(ôèÈÂ
+Vjavascript:S1481·"9Remove the declaration of the unused 'scroller' variable.(º§¾
+Tjavascript:S1117ï"2'_percent' is already declared in the upper scope.(ªÜ¼–üÿÿÿÿ
+7javascript:S2814³"'node' is already defined.(Ø…º«
+9javascript:S2814¼"'i' is already defined.(äóÈ»úÿÿÿÿ
+Yjavascript:S1481û"7Remove the declaration of the unused 'timer1' variable.(¯è’Šúÿÿÿÿ
+vjavascript:S3973ƒ"YUse curly braces or indentation to denote the code conditionally executed by this "else".(ÔÍØ
+Qjavascript:S1117İ"/'event' is already declared in the upper scope.(å÷ø§øÿÿÿÿ
+4javascript:S2814´"'i' is already defined.(ïû¦œ
+Jjavascript:S1117Å"-'opt' is already declared in the upper scope.(Ü«®Ô
+vjavascript:S3973Ø"YUse curly braces or indentation to denote the code conditionally executed by this "else".(ÔÍØ
+4javascript:S2814´"'j' is already defined.(ïû¦œ
+Mjavascript:S1117û"+'i' is already declared in the upper scope.(ŠËªïüÿÿÿÿ
+Jjavascript:S1533ë"(Remove this use of "String" constructor.(¤ª©µúÿÿÿÿ
+Mjavascript:S1117®"+'e' is already declared in the upper scope.(ùºŸ­şÿÿÿÿ
+4javascript:S2814¡"'m' is already defined.(½šĞ
+Mjavascript:S1117¢"+'m' is already declared in the upper scope.(§½Ñ×şÿÿÿÿ
+8javascript:S1116´"Unnecessary semicolon.(ôŸìúÿÿÿÿ
+Qjavascript:S1481˜"4Remove the declaration of the unused 'val' variable.(±¾…Û
+{javascript:S3973ø"YUse curly braces or indentation to denote the code conditionally executed by this "else".(°úÒçøÿÿÿÿ
+Ljavascript:S1117¥"/'timer' is already declared in the upper scope.(œõ‡¦

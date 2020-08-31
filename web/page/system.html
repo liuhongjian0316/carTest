@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>系统实时监控</title>
+    <title>车辆信息</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;max-height: 100%">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            系统信息
+        </div>
+        <div class="layui-card-body">
+            <table class="layui-table">
+                <colgroup>
+                    <col width="150">
+                    <col width="200">
+                    <col>
+                </colgroup>
+                <tbody>
+                <tr>
+                    <td>系统名称</td>
+                    <td id="sysName">公务用车管理系统</td>
+                </tr>
+                <tr>
+                    <td>版本</td>
+                    <td id="sysVersion">v1.0</td>
+                </tr>
+                <tr>
+                    <td>系统环境</td>
+                    <td id="systemEnv">win10</td>
+                </tr>
+                <tr>
+                    <td>jdk版本</td>
+                    <td id="jdkVer">1.8</td>
+                </tr>
+                <tr>
+                    <td>druid监控界面</td>
+                    <td><a href="http://localhost:8888/car/druid/" class="layui-btn layui-btn-primary">druid-Monitor</a></td>
+                </tr>
+                <tr>
+                    <td>直播</td>
+                    <td><a href="http://121.36.156.106/" class="layui-btn layui-btn-danger">直播中</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div style="padding:280px; background-color: #F2F2F2;max-height: 100%">
+    <div class="layui-card">
+        <div style="width: 500px;height: 500px;position: absolute;left: 20px;top: 400px">
+            <div id="systemCpu" style="width:500px;height: 500px"></div>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div style="width: 500px;height: 500px;position: absolute;right: 20px;top: 400px">
+            <div id="systemMer" style="width:500px;height: 500px"></div>
+        </div>
+    </div>
+</div>
+<script src="/car/static//jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/echarts/echarts.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script th:inline="none">
+    layui.config({
+        version: '1584613945938' //为了更新 js 缓存，可忽略
+    });
+
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function() {
+        var laydate = layui.laydate //日期
+            , laypage = layui.laypage //分页
+            , layer = layui.layer //弹层
+            , table = layui.table //表格
+            , form = layui.form //表单
+            , carousel = layui.carousel //轮播
+            , upload = layui.upload //上传
+            , element = layui.element //元素操作
+            , slider = layui.slider //滑块
+        //CPU仪表盘
+        var myChart = echarts.init(document.getElementById('systemCpu'));
+        myChart.setOption({
+            title:{
+              text: 'CPU仪表盘'
+            },
+            tooltip: {
+                formatter: '{a} <br/>{b} : {c}%'
+            },
+            toolbox: {
+                feature: {
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            series: [
+                {
+                    name: 'CPU使用率',
+                    type: 'gauge',
+                    detail: {formatter: '{value}%'},
+                    data: [{value: 50, name: '完成率'}]
+                }
+            ]
+        })
+        myChart.showLoading();
+
+        $.ajax({
+            type:'get',
+            url:'/car/system/getSystemCpu',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                // 填入数据
+                myChart.hideLoading();
+                myChart.setOption({
+                    series: [
+                        {
+                            name: 'CPU使用率',
+                            type: 'gauge',
+                            detail: {formatter: '{value}%'},
+                            data: data.data
+                        }
+                    ]
+
+                });
+            },
+            error:function () {
+                layer.alert("网络不佳，数据获取不到");
+            }
+        });
+
+        //内存使用情况
+        var myChart2 = echarts.init(document.getElementById('systemMer'));
+        myChart2.setOption({
+            title:{
+                text: '内存仪表盘'
+            },
+            tooltip: {
+                formatter: '{a} <br/>{b} : {c}%'
+            },
+            toolbox: {
+                feature: {
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            series: [
+                {
+                    name: '内存使用率',
+                    type: 'gauge',
+                    detail: {formatter: '{value}%'},
+                    data: [{value: 50, name: '完成率'}]
+                }
+            ]
+        });
+        //ajax
+        myChart2.showLoading();
+
+        $.ajax({
+            type:'get',
+            url:'/car/system/getSystemMemory',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                // 填入数据
+                myChart2.hideLoading();
+                myChart2.setOption({
+                    series: [
+                        {
+                            name: '内存使用率',
+                            type: 'gauge',
+                            detail: {formatter: '{value}%'},
+                            data: data.data
+                        }
+                    ]
+
+                });
+            },
+            error:function () {
+                layer.alert("网络不佳，数据获取不到");
+            }
+        });
+
+        //获取版本信息
+        $("#sysName").html("");
+        $("#sysVersion").html("");
+        $("#systemEnv").html("");
+        $("#jdkVer").html("");
+        var loginLoadIndex = layer.load(2);
+        $.ajax({
+            type:'get',
+            url:'/car/system/getSysinfo',
+            contentType:'application/json',
+            dataType:'json',
+            success:function (data) {
+                if (data.status == "200") {
+                    $("#sysName").html(data.data.sysName);
+                    $("#sysVersion").html(data.data.sysVersion);
+                    $("#systemEnv").html(data.data.systemEnv);
+                    $("#jdkVer").html(data.data.jdkVer);
+                    layer.closeAll();
+                }else{
+                    layer.closeAll();
+                    layer.close(loginLoadIndex);
+                    layer.alert("获取信息失败，请刷新页面");
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，数据获取不到");
+                layer.closeAll();
+            }
+        });
+    });
+</script>
+</body>
+</html>

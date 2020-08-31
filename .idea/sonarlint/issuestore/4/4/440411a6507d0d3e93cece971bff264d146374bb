@@ -1,0 +1,60 @@
+
+K
+java:S1874B"/Remove this use of "Integer"; it is deprecated.(Ã“÷8º›ùèÃ.
+z
+java:S2226$"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(ôÊåôøÿÿÿÿ8º›ùèÃ.
+g
+java:S1128"JRemove this unused import 'org.elasticsearch.action.search.SearchRequest'.(ßÄƒ–8üİîªµ.
+k
+java:S1128"IRemove this unused import 'org.elasticsearch.client.RestHighLevelClient'.(û˜Ò›úÿÿÿÿ8üİîªµ.
+L
+java:S1128 "*Remove this unused import 'java.util.Map'.(¼è½Òşÿÿÿÿ8’¶ğÈÃ.
+R
+java:S1128"5Remove this unused import 'org.apache.http.HttpHost'.(õÑ‰¯8üİîªµ.
+K
+java:S1874B"/Remove this use of "Integer"; it is deprecated.(Ã“÷8º›ùèÃ.
+…
+java:S1989+"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8º›ùèÃ.
+Y
+java:S2696š"6Make the enclosing method "static" or remove this set.(ÇÌ¦‹ıÿÿÿÿ8º›ùèÃ.
+‡
+java:S1989ƒ"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(Õ ¼øÿÿÿÿ8º›ùèÃ.
+U
+java:S1128"3Remove this unused import 'work.aijiu.dao.UserDao'.(µœ˜ÿúÿÿÿÿ8ÒÏ…–º.
+a
+java:S1128	"DRemove this unused import 'org.elasticsearch.client.RequestOptions'.(£¤ˆ‡8üİîªµ.
+k
+java:S1128"IRemove this unused import 'org.elasticsearch.action.index.IndexResponse'.(¯ñÍ¹ûÿÿÿÿ8üİîªµ.
+f
+java:S1128"DRemove this unused import 'org.elasticsearch.common.unit.TimeValue'.(Ê…ÿøÿÿÿÿ8üİîªµ.
+u
+java:S2226%"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(À¯óî8º›ùèÃ.
+u
+java:S2226&"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(’­8º›ùèÃ.
+L
+java:S1874/"/Remove this use of "Integer"; it is deprecated.(Û¨¼¦8º›ùèÃ.
+\
+java:S1128
+"@Remove this unused import 'org.elasticsearch.client.RestClient'.(ìşÇT8üİîªµ.
+h
+java:S1128"KRemove this unused import 'org.elasticsearch.common.xcontent.XContentType'.(‡¦œ¯8üİîªµ.
+…
+java:S1989m"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8º›ùèÃ.
+M
+java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ8çéñÇÃ.
+e
+java:S1128"HRemove this unused import 'org.elasticsearch.action.index.IndexRequest'.(‰ñ¹¤8üİîªµ.
+m
+java:S1989-"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8º›ùèÃ.
+†
+java:S1989s"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(Õ ¼øÿÿÿÿ8º›ùèÃ.
+‚
+java:S1989¢"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(İõÀî8áîÊéÃ.
+L
+java:S1874/"/Remove this use of "Integer"; it is deprecated.(Û¨¼¦8º›ùèÃ.
+J
+java:S1481™",Remove this unused "session" local variable.(ôÜ½¯8º›ùèÃ.
+m
+java:S1989o"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8º›ùèÃ.
+o
+java:S3776)"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(¹Â·Š8º›ùèÃ.

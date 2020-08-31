@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="work.aijiu.dao.ApproverDao">
+    <insert id="insApp" parameterType="String" >
+        insert into t_approver
+        (applicationNumber,applicationName,tel,departmentId,leaveTime,returnTime,destination,reason,destinationTime,approverComment,approverState,isRead)
+        values
+        (
+            #{applicationNumber},
+            #{applicationName},
+            #{tel},
+            #{departmentId},
+            #{leaveTime},
+            #{returnTime},
+            #{destination},
+            #{reason},
+            #{destinationTime},
+            #{approverComment},
+            #{approverState},
+            #{isRead}
+        )
+    </insert>
+    <update id="updateState" parameterType="String">
+        update t_approver set
+        approver_pid = #{approver_pid},
+        approver_id = #{approver_id},
+        approverTime = #{approverTime},
+        approverState = #{approverState},
+        approverComment = #{approverComment}
+        where applicationid = #{applicationid}
+    </update>
+    <update id="updateStateById" parameterType="String">
+        update t_approver set
+        approver_pid = #{approver_pid},
+        approver_id = #{approver_id},
+        approverTime = #{approverTime},
+        approverState = #{approverState}
+        where applicationid = #{applicationid}
+    </update>
+    <update id="delApp" parameterType="String">
+    update t_approver set
+    approverState = #{approverState}
+    where applicationid = #{applicationid}
+    </update>
+    <update id="updateIsRead" parameterType="String">
+        update t_approver set
+        isRead = #{isRead}
+        where applicationid = #{applicationid}
+    </update>
+</mapper>

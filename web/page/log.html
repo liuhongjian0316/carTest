@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>日志分析</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;max-height: 100%">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-set">日志位置配置</i> <i style="float: right;"><a class="layui-btn layui-btn-normal" id="editBtn">设置</a></i>
+        </div>
+        <div class="layui-card-body">
+            <table class="layui-table" id="demo2">
+                <colgroup>
+                    <col width="150">
+                    <col width="200">
+                    <col>
+                </colgroup>
+                <tbody>
+                <tr>
+                    <td>本地位置</td>
+                    <td id="locationSave">你潮吧</td>
+                </tr>
+                <tr>
+                    <td>备份位置</td>
+                    <td id="serverSave">你个沙雕</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs">日志列表</i>
+        </div>
+    </div>
+    <div class="layui-card">
+        <table class="layui-hide" id="demo" lay-filter="test"></table>
+    </div>
+</div>
+
+
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script>
+    layui.config({
+        version: '1584613945938' //为了更新 js 缓存，可忽略
+    });
+
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function() {
+        var laydate = layui.laydate //日期
+            , laypage = layui.laypage //分页
+            , layer = layui.layer //弹层
+            , table = layui.table //表格
+            , form = layui.form //表单
+            , carousel = layui.carousel //轮播
+            , upload = layui.upload //上传
+            , element = layui.element //元素操作
+            , slider = layui.slider //滑块
+        //执行一个 table 实例
+        table.render({
+            elem: '#demo'
+            , height: 420
+            , url: '/car/user/loginlog' //数据接口
+            , title: '车辆信息表'
+            , page: true //开启分页
+            , totalRow: true //开启合计行
+            , cols: [[ //表头
+                {field: 'k', title: 'uuid', width: 300, sort: true, fixed: 'left'}
+                , {field: 'v', title: '日志信息', width: 800}
+            ]]
+        });
+        //日志配置初始值
+        $.ajax({
+            type:'get',
+            url:'/car/user/getsetting',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200") {
+                    $("#locationSave").html(data.data.saveurl);
+                    $("#serverSave").html(data.data.serveurl);
+                }else{
+                    layer.alert("获取数据失败");
+                }
+            },
+            error:function () {
+                layer.alert("请检查你的网络");
+                layer.closeAll();
+            }
+        });
+        $(document).on('click','#editBtn',function(){
+            $.ajax({
+                type:'get',
+                url:'/car/user/getsetting',
+                dataType:'json',
+                contentType:'application/json',
+                success:function (data) {
+                    //赋初始值
+                    form.val("editformdata",{
+                        "saveurl":data.data.saveurl
+                        ,"serveurl":data.data.serveurl
+                    });
+                },
+                error:function () {
+                    layer.alert("网络不佳，数据获取不到");
+                }
+            });
+            //打开编辑模态框
+            layer.open({
+                type: 1,
+                title: '编辑信息', //不显示标题栏
+                closeBtn: 2,
+                offset: '10px',
+                area: ['400px','400px'],
+                shade: 0.8,
+                id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                btn: ['保存','取消'],
+                btnAlign: 'r',
+                moveType: 1, //拖拽模式，0或者1
+                content:$('.editPage'),
+                yes: function (index, layero) {
+                    //触发提交按钮
+                    layero.find('form').find('a[lay-submit]').click();
+                    //修改按钮触发
+                    form.on('submit(EditformDemo)', function(data){
+                        var loginLoadIndex = layer.load(2);
+                        $.ajax({
+                            type:'post',
+                            url:'/car/user/updateSetting',
+                            dataType:'json',
+                            data:JSON.stringify(data.field),
+                            contentType:'application/json',
+                            success:function (data) {
+                                layer.close(loginLoadIndex);
+                                if (data.status == "200"){
+                                    layer.msg('配置成功');
+                                    $.ajax({
+                                        type:'get',
+                                        url:'/car/user/getsetting',
+                                        dataType:'json',
+                                        contentType:'application/json',
+                                        success:function (data) {
+                                            if (data.status == "200") {
+                                                $("#locationSave").html(data.data.saveurl);
+                                                $("#serverSave").html(data.data.serveurl);
+                                            }else{
+                                                layer.alert("获取数据失败");
+                                            }
+                                        },
+                                        error:function () {
+                                            layer.alert("请检查你的网络");
+                                            layer.closeAll();
+                                        }
+                                    });
+                                    layer.closeAll();
+                                }else{
+                                    layer.close(loginLoadIndex);
+                                    layer.alert("修改失败");
+                                    $('#loginBtn').val("立即提交");
+                                }
+                            },
+                            error:function () {
+                                layer.close(loginLoadIndex);
+                                layer.alert("网络不佳，请稍后重试");
+                                $('#formDemo').val("正在添加...");
+                            }
+                        });
+                    });
+                },
+            });
+        });
+    })
+</script>
+</body>
+<div class="editPage" style="display: none">
+    <form class="layui-form" lay-filter="editformdata">
+        <input type="text" name="id" style="display: none">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">本地位置</label>
+            <div class="layui-input-block">
+                <input type="text" name="saveurl" required  placeholder="请输入路径" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备份位置</label>
+            <div class="layui-input-block">
+                <input type="text" name="serveurl" required  placeholder="请输入路径" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-input-block" style="display: none">
+                <a class="layui-btn" lay-submit lay-filter="EditformDemo" style="display: none">立即提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+</html>

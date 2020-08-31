@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="work.aijiu.dao.MenuDao">
+    <select id="selMenu" parameterType="String" resultType="work.aijiu.entity.Menu">
+       select * from
+        (select * from t_role_menu where roleid = #{roleid}) r,
+        t_menu m
+        where r.menuid = m.mid
+    </select>
+    <insert id="insert">
+        insert into t_menu
+        (mid,name,url,pid)
+        values
+        (
+        #{mid} ,#{name},#{url},#{pid}
+        )
+    </insert>
+    <update id="update">
+        update t_menu
+        set
+        mid=#{mid},
+        name=#{name},
+        url=#{url},
+        pid=#{pid}
+        where id= #{id}
+    </update>
+    <delete id="delete">
+        delete from t_menu where id =#{id}
+    </delete>
+</mapper>

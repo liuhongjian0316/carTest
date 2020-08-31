@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>定时任务</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+    <style>
+        .demo-input{padding-left: 10px; height: 38px; min-width: 200px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+    </style>
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;max-height: 100%">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs">数据列表</i>
+        </div>
+    </div>
+    <div class="layui-card">
+        <table class="layui-hide" id="demo" lay-filter="test"></table>
+    </div>
+</div>
+<script type="text/html" id="tplstatus">
+    {{#  if(d.jobStatus == 0){ }}
+    <input type="checkbox" lay-skin="switch" value={{d.id}} lay-filter="status">
+    {{#  } else if(d.jobStatus == 1){ }}
+    <input type="checkbox" checked lay-skin="switch" value={{d.id}} lay-filter="status">
+    {{#  }  }}
+</script>
+<script type="text/html" id="tpltime1">
+    {{ layui.laytpl.timeFormat(d.createTime)}}
+</script>
+<script type="text/html" id="tpltime2">
+    {{ layui.laytpl.timeFormat(d.updateTime)}}
+</script>
+<script type="text/html" id="barDemo">
+    {{#  if(d.id == 1 || d.id == 2 && d.jobStatus == 1){ }}
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="add">添加</a>
+    {{#  } else if(d.id == 1 || d.id == 2 && d.jobStatus == 0){ }}
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="add">添加</a>
+    {{#  }  else if(d.jobStatus == 0){ }}
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="add">添加</a>
+    {{# } else if(d.jobStatus == 1){}}
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="add">添加</a>
+    {{# }}}
+
+</script>
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script>
+    layui.config({
+        version: '1584613945938' //为了更新 js 缓存，可忽略
+    });
+
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider','laytpl'], function(){
+        var laydate = layui.laydate //日期
+            ,laypage = layui.laypage //分页
+            ,layer = layui.layer //弹层
+            ,table = layui.table //表格
+            ,form = layui.form //表单
+            ,carousel = layui.carousel //轮播
+            ,upload = layui.upload //上传
+            ,element = layui.element //元素操作
+            ,slider = layui.slider //滑块
+            ,laytpl = layui.laytpl;
+
+        laytpl.timeFormat = function (time) {
+            var date = new Date(time);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+            var Y = date.getFullYear() + '-';
+            var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+            var D = (date.getDate() < 10 ? '0'+date.getDate() : date.getDate()) + ' ';
+            var h = (date.getHours() < 10 ? '0'+date.getHours() : date.getHours()) + ':';
+            var m = (date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes()) + ':';
+            var s = (date.getSeconds() < 10 ? '0'+date.getSeconds() : date.getSeconds());
+            return Y+M+D+h+m+s;
+        };
+        var oleplateNumber = null;
+        //时间选择器
+        laydate.render({
+            elem:'#cTime1'
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem:'#uTime1'
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem:'#cTime2'
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem:'#uTime2'
+            ,type: 'datetime'
+        });
+        //执行一个 table 实例
+        table.render({
+            elem: '#demo'
+            ,height: 480
+            ,url: '/car/task/taskpage' //数据接口
+            ,title: '定时任务'
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                {field: 'id', title: 'ID', width:60, sort: true, fixed: 'left'}
+                ,{field: 'jobName', title: '任务名', width:100}
+                ,{field: 'description', title: '任务描述', width:120}
+                ,{field: 'cronExpression', title: 'cron表达式', width: 120}
+                ,{field: 'beanClass', title: '执行类', width:100}
+                ,{field: 'jobStatus', title: '任务状态', width: 80,templet: '#tplstatus'}
+                ,{field: 'jobGroup', title: '任务分组', width:100}
+                ,{field: 'createUser', title: '创建者', width: 70}
+                ,{field: 'createTime', title: '创建时间', width: 120,templet: '#tpltime1'}
+                ,{field: 'updateUser', title: '更新者', width: 70, }
+                ,{field: 'updateTime', title: '更新时间', width: 120,templet: '#tpltime2'}
+                ,{fixed: 'right', title:'操作',width: 220, align:'center', toolbar: '#barDemo'}
+            ]],
+        });
+        //开关
+        form.on('switch(status)', function(data){
+            if(data.elem.checked){
+                $.ajax({
+                    type:'get',
+                    url:'/car/task/updatestate?id='+data.value+"&status="+1,
+                    dataType:'json',
+                    contentType:'application/json',
+                    success:function (data) {
+                        if (data.status == "200") {
+                            layer.msg('已开启');
+                        }
+                    },
+                    error:function () {
+                        layer.alert("请检查你的网络！！！");
+                        layer.closeAll();
+                    }
+                });
+            }else {
+                $.ajax({
+                    type:'get',
+                    url:'/car/task/updatestate?id='+data.value+"&status="+0,
+                    dataType:'json',
+                    contentType:'application/json',
+                    success:function (data) {
+                        if (data.status == "200") {
+                            layer.msg('已关闭');
+                        }
+                    },
+                    error:function () {
+                        layer.alert("请检查你的网络！！！");
+                        layer.closeAll();
+                    }
+                });
+            }
+        });
+        //监听行工具事件
+        table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                ,layEvent = obj.event; //获得 lay-event 对应的值
+            if(layEvent === 'del'){
+                layer.confirm('真的删除这条数据吗', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构
+                    layer.close(index);
+                    var loginLoadIndex = layer.load(2);
+                    //向服务端发送删除指令
+                    $.ajax({
+                        type:'get',
+                        url:'/car/task/del?id='+data.id,
+                        dataType:'json',
+                        contentType:'application/json',
+                        success:function (data) {
+                            if (data.status == "200") {
+                                layer.msg('删除成功');
+                                table.reload('demo', {
+                                    url: '/car/task/taskpage'
+                                    , where: {} //设定异步数据接口的额外参数
+                                });
+                                layer.closeAll();
+                            }else{
+                                layer.closeAll();
+                                layer.close(loginLoadIndex);
+                                layer.alert("删除失败");
+                            }
+                        },
+                        error:function () {
+                            layer.alert("请检查你的cron表达式是否合法");
+                            layer.closeAll();
+                        }
+                    });
+                });
+            } else if(layEvent === 'edit'){
+                //修改模态框赋值
+                $.ajax({
+                    type:'get',
+                    url:'/car/task/getone?id='+data.id,
+                    dataType:'json',
+                    async: false,
+                    contentType:'application/json',
+                    success:function (data) {
+                        //赋初始值
+                        form.val("editformdata",{
+                            "id":data.data.id
+                            ,"jobName":data.data.jobName
+                            ,"description":data.data.description
+                            ,"cronExpression":data.data.cronExpression
+                            ,"beanClass":data.data.beanClass
+                            ,"jobStatus":data.data.jobStatus
+                            ,"jobGroup":data.data.jobGroup
+                            ,"createUser":data.data.createUser
+                            ,"createTime":data.data.createTime
+                            ,"updateUser":data.data.updateUser
+                            ,"updateTime":data.data.updateTime
+                        });
+                    },
+                    error:function () {
+                        layer.alert("网络错误！");
+                    }
+                });
+                //打开编辑模态框
+                layer.open({
+                    type: 1,
+                    title: '编辑信息', //不显示标题栏
+                    closeBtn: 2,
+                    offset: '10px',
+                    area: ['820px','635px'],
+                    shade: 0.8,
+                    id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                    btn: ['保存','取消'],
+                    btnAlign: 'r',
+                    moveType: 1, //拖拽模式，0或者1
+                    content:$('.editPage'),
+                    yes: function (index, layero) {
+                        //触发提交按钮
+                        layero.find('form').find('a[lay-submit]').click();
+                        //修改按钮触发
+                        form.on('submit(EditformDemo)', function(data){
+                            var loginLoadIndex = layer.load(2);
+                            $.ajax({
+                                type:'post',
+                                url:'/car/task/update',
+                                dataType:'json',
+                                data:JSON.stringify(data.field),
+                                contentType:'application/json',
+                                success:function (data) {
+                                    layer.close(loginLoadIndex);
+                                    if (data.status == "200"){
+                                        layer.msg('修改成功');
+                                        table.reload('demo', {
+                                            url: '/car/task/taskpage'
+                                            ,where: {} //设定异步数据接口的额外参数
+                                        });
+                                        layer.closeAll();
+                                    }else{
+                                        layer.close(loginLoadIndex);
+                                        layer.alert("修改失败");
+                                        $('#loginBtn').val("立即提交");
+                                    }
+                                },
+                                error:function () {
+                                    layer.close(loginLoadIndex);
+                                    layer.alert("请检查你的cron表达式是否合法");
+                                    $('#formDemo').val("正在添加...");
+                                }
+                            });
+                        });
+                    }
+                });
+
+            }else if(layEvent === 'add'){
+                layer.open({
+                    type: 1,
+                    title: '添加信息', //不显示标题栏
+                    closeBtn: 2,
+                    offset: '10px',
+                    area: ['820px','635px'],
+                    shade: 0.8,
+                    id: (new Date()).valueOf(), //设定一个id，防止重复弹出 时间戳1280977330748
+                    btn: ['添加', '重置','取消'],
+                    btnAlign: 'r',
+                    moveType: 1, //拖拽模式，0或者1
+                    content:$('.addPage'),
+                    yes: function (index, layero) {
+                        //触发提交按钮
+                        layero.find('form').find('a[lay-submit]').click();
+                        //添加按钮触发
+                        form.on('submit(AddformDemo)', function(data){
+                            var loginLoadIndex = layer.load(2);
+                            $.ajax({
+                                type:'post',
+                                url:'/car/task/add',
+                                dataType:'json',
+                                data:JSON.stringify(data.field),
+                                contentType:'application/json',
+                                success:function (data) {
+                                    layer.close(loginLoadIndex);
+                                    if (data.status == "200"){
+                                        layer.msg('添加成功');
+                                        table.reload('demo', {
+                                            url: '/car/task/taskpage'
+                                            ,where: {} //设定异步数据接口的额外参数
+                                        });
+                                        layer.close(index);
+
+                                    }else{
+                                        layer.close(loginLoadIndex);
+                                        layer.alert("添加失败");
+                                        $('#loginBtn').val("立即提交");
+                                    }
+                                },
+                                error:function () {
+                                    layer.close(loginLoadIndex);
+                                    layer.alert("请检查你的cron表达式是否合法");
+                                    $('#formDemo').val("正在添加...");
+                                }
+                            });
+                        });
+                    },
+                    btn2:function (index,layero) {
+                        //触发重置按钮
+                        layero.find('form').find('button').click();
+
+                        return false;
+                    },
+                    btn3:function (index,layero) {
+                        //取消
+                    }
+                });
+            }
+        });
+
+    });
+</script>
+</body>
+<!--添加页面-->
+<div class="addPage" style="display: none">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务名</label>
+            <div class="layui-input-block">
+                <input type="text" name="jobName" required  placeholder="请输入任务名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务描述</label>
+            <div class="layui-input-block">
+                <input type="text" name="description" required   placeholder="请输入任务描述" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">cron表达式</label>
+            <div class="layui-input-block">
+                <input type="text" name="cronExpression" required   placeholder="请输入cron表达式" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">执行类</label>
+            <div class="layui-input-block">
+                <input type="text" name="beanClass" required   placeholder="请输入执行类" autocomplete="off" class="layui-input" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <select name="jobStatus" lay-verify="required">
+                    <option value=""></option>
+                    <option value="1">执行</option>
+                    <option value="0">不执行</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务分组</label>
+            <div class="layui-input-block">
+                <input type="text" name="jobGroup" required   placeholder="请输入任务分组" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">创造者</label>
+            <div class="layui-input-block">
+                <input type="text" name="createUser" required  placeholder="请输入创造者" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">创建时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="createTime" lay-verify="required" class="demo-input" placeholder="请选择时间"  id="cTime1" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">更新者</label>
+            <div class="layui-input-block">
+                <input type="text" name="updateUser" required  placeholder="请输入更新者" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">更新时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="updateTime" lay-verify="required" class="demo-input" placeholder="请选择时间" id="uTime1" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-input-block" style="display: none">
+                <a class="layui-btn" lay-submit lay-filter="AddformDemo" style="display: none">立即提交</a>
+                <button type="reset" class="layui-btn layui-btn-primary" style="display: none" >重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="editPage" style="display: none">
+    <form class="layui-form" lay-filter="editformdata">
+        <input type="text" name="id" style="display: none">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务名</label>
+            <div class="layui-input-block">
+                <input type="text" name="jobName" required  placeholder="请输入任务名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务描述</label>
+            <div class="layui-input-block">
+                <input type="text" name="description" required   placeholder="请输入任务描述" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">cron表达式</label>
+            <div class="layui-input-block">
+                <input type="text" name="cronExpression" required   placeholder="请输入cron表达式" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">执行类</label>
+            <div class="layui-input-block">
+                <input type="text" name="beanClass" required   placeholder="请输入执行类" autocomplete="off" class="layui-input" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <select name="jobStatus" lay-verify="required">
+                    <option value=""></option>
+                    <option value="1">执行</option>
+                    <option value="0">不执行</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务分组</label>
+            <div class="layui-input-block">
+                <input type="text" name="jobGroup" required   placeholder="请输入任务分组" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">创造者</label>
+            <div class="layui-input-block">
+                <input type="text" name="createUser" required  placeholder="请输入创造者" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">创建时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="createTime" lay-verify="required" class="demo-input" placeholder="请选择时间"  id="cTime2" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">更新者</label>
+            <div class="layui-input-block">
+                <input type="text" name="updateUser" required  placeholder="请输入更新者" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">更新时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="updateTime" lay-verify="required" class="demo-input" placeholder="请选择时间" id="uTime2" readonly="readonly">
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none">
+            <div class="layui-input-block" style="display: none">
+                <a class="layui-btn" lay-submit lay-filter="EditformDemo" style="display: none">立即提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+</html>

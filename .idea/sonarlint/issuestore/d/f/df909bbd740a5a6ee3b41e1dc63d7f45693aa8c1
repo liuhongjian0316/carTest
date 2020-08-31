@@ -1,0 +1,30 @@
+
+Q
+java:S1128	"4Remove this unused import 'java.util.regex.Matcher'.(ëÅ›ã8şÃ·ÀÃ.
+™
+java:S2681""|This line will not be executed in a loop; only the first line of this 2-line block will be. The rest will execute only once.(Ø–™ƒ8”¾İ¿Ã.
+>
+java:S1659"!Declare "end" on a separate line.(œï¹¬8îëÀÃ.
+
+java:S2681$"|This line will not be executed in a loop; only the first line of this 2-line block will be. The rest will execute only once.(¶ğÙªùÿÿÿÿ8…¾ñÀÃ.
+V
+java:S1128
+"4Remove this unused import 'java.util.regex.Pattern'.(Ã•…Äúÿÿÿÿ8şÃ·ÀÃ.
+V
+java:S4719"9Replace charset name argument with StandardCharsets.UTF_8(ÀãÖ8·à‚ÁÃ.
+
+java:S2681%"|This line will not be executed in a loop; only the first line of this 2-line block will be. The rest will execute only once.(¾¡€¹üÿÿÿÿ8ª’ñÀÃ.
+
+java:S2681"|This line will not be executed in a loop; only the first line of this 2-line block will be. The rest will execute only once.(©½úÿÿÿÿ8îëÀÃ.
+L
+java:S2093"*Change this "try" to a try-with-resources.(¡»¢üùÿÿÿÿ8Åİ¾Ã.
+>
+java:S1643"Use a StringBuilder instead.(ÊµÀ¿úÿÿÿÿ8îëÀÃ.
+™
+java:S2681"|This line will not be executed in a loop; only the first line of this 2-line block will be. The rest will execute only once.(Ø–™ƒ8¼ıÜ¿Ã.
+™
+java:S2681!"|This line will not be executed in a loop; only the first line of this 2-line block will be. The rest will execute only once.(ÂŒ®£8îëÀÃ.
+t
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(›ñşøÿÿÿÿ8üşğÀÃ.
+a
+java:S2147)"DCombine this catch with the one at line 39, which has the same body.(ï­£Ä8îëÀÃ.

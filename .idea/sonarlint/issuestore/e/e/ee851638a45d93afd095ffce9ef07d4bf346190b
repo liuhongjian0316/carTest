@@ -1,0 +1,15 @@
+
+b	java:S112—"FDefine and throw a dedicated exception instead of using a generic one.(ÄÊĞ88ÏöÃÚ´.
+I
+java:S1168¯"+Return an empty collection instead of null.(¥¹ï8ÏöÃÚ´.
+I
+java:S1168à"+Return an empty collection instead of null.(¥¹ï8ÏöÃÚ´.
+I
+java:S1168É"+Return an empty collection instead of null.(¥¹ï8ÏöÃÚ´.
+{
+java:S1488™"]Immediately return this expression instead of assigning it to the temporary variable "count".(ıÿî¢8ÏöÃÚ´.
+c	java:S112¥"FDefine and throw a dedicated exception instead of using a generic one.(Ÿ½”8ÏöÃÚ´.
+
+java:S1488º"^Immediately return this expression instead of assigning it to the temporary variable "remove".(²ĞÉàıÿÿÿÿ8ÏöÃÚ´.
+|
+java:S1488…"^Immediately return this expression instead of assigning it to the temporary variable "cursor".(Ôçö8ÏöÃÚ´.

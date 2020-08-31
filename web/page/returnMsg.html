@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>归还记录</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;max-height: 100%">
+    <table class="layui-hide" id="demo" lay-filter="test" lay-data="test"></table>
+</div>
+<script type="text/html" id="titleTpl">
+    {{#  if(d.state == 0){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">未入库</a>
+    {{#  } else if(d.state == 1){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">已入库</a>
+    {{#  }  }}
+</script>
+<script type="text/html" id="titleTpl2">
+    {{#  if(d.runroute == null || d.runroute == ''){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">数据还未更新请过段时间查看</a>
+    {{#  } else{ }}
+    {{ d.runroute }}
+    {{#  }  }}
+</script>
+<script type="text/html" id="titleTpl3">
+    {{#  if(d.kmbefore == null || d.kmBefore == ''){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">数据还未更新请过段时间查看</a>
+    {{#  } else{ }}
+    {{ d.kmbefore }}千米
+    {{#  }  }}
+</script>
+<script type="text/html" id="titleTpl4">
+    {{#  if(d.kmafter == null || d.kmAfter == ''){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">数据还未更新请过段时间查看</a>
+    {{#  } else{ }}
+    {{ d.kmafter }}千米
+    {{#  }  }}
+</script>
+<script type="text/html" id="titleTpl5">
+    {{#  if(d.toll == null || d.toll == ''){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">数据还未更新请过段时间查看</a>
+    {{#  } else{ }}
+    {{ d.toll }}元
+    {{#  }  }}
+</script>
+<script type="text/html" id="titleTpl6">
+    {{#  if(d.dispatchcommment == null || d.dispatchCommment == ''){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs">数据还未更新请过段时间查看</a>
+    {{#  } else{ }}
+    {{ d.dispatchcommment }}
+    {{#  }  }}
+</script>
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script th:inline="none">
+    layui.use(['layer','jquery','element','form','laypage','laydate','table'], function(){
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        var element = layui.element;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var laypage = layui.laypage;
+        var laydate = layui.laydate;
+        var table = layui.table;
+
+
+        //执行一个 table 实例
+        table.render({
+            elem: '#demo'
+            ,height: 420
+            ,url: '/car/dispatch/returnMesPage'//数据接口
+            ,title: '申请表'
+            ,page: true //开启分页
+            ,limits:[5,10,15,20]
+            ,cols: [[ //表头
+                ,{field: 'dispatchid', title: 'ID', width:60, sort: true}
+                ,{field: 'drivername', title: '申请人', width:80, sort: true}
+                ,{field: 'carNumber', title: '申请车牌号', width:105, sort: true}
+                ,{field: 'actualtime', title: '开始时间', width:200, sort: true}
+                ,{field: 'beintime', title: '入库时间', width:200, sort: true}
+                ,{field: 'runroute', title: '行车路线', width:200, sort: true,templet: '#titleTpl2'}
+                ,{field: 'kmbefore', title: '行车前的里程数', width:200, sort: true,templet: '#titleTpl3'}
+                ,{field: 'kmafter', title: '行车后的里程数', width:200, sort: true,templet: '#titleTpl4'}
+                ,{field: 'toll', title: '过路费', width:100, sort: true,templet: '#titleTpl5'}
+                ,{field: 'dispatchcommment', title: '备注', width:100, sort: true,templet: '#titleTpl6'}
+                ,{field: 'state', title: '状态', width:80, sort: true, fixed: 'right',templet: '#titleTpl'}
+            ]]
+        });
+
+    });
+
+</script>
+</body>
+</html>

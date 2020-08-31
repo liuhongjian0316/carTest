@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="work.aijiu.dao.CarinfoVODao">
+
+    <select id="searchCar" resultType="work.aijiu.dao.CarinfoVODao">
+        select t.VEHICLE_CLASSNAME,c.* from t_carinfo c, t_cartype t
+        where
+        c.VEHICLE_CLASSNAME = t.CARTYPE_ID and
+        1 = 1
+        <if test="plateNumber !='' ">
+            and c.PLATE_NUMBER like CONCAT('%',#{plateNumber},'%')
+        </if>
+        <if test="vehicleClassname !='' ">
+            and c.VEHICLE_CLASSNAME = #{vehicleClassname}
+        </if>
+        <if test="brandModel !='' ">
+            and c.BRAND_MODEL like CONCAT('%',#{brandModel},'%')
+        </if>
+        <if test="state !='' ">
+            and c.STATE = #{state}
+        </if>
+
+        <if test="regBeg !='' and regEnd!= ''">
+            and c.REG_TIME BETWEEN #{regBeg} and #{regEnd}
+        </if>
+
+
+        <if test="exBeg !='' and exEnd != ''">
+            and c.EXAMINATION_TIME BETWEEN  #{exBeg} and #{exEnd}
+        </if>
+
+        limit  #{page} , #{limit}
+    </select>
+</mapper>

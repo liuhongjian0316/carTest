@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>主页</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/car/static/mystyle/css/admin.css">
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;max-height: 100%">
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        总车辆
+                        <span class="layui-badge layui-bg-blue layuiadmin-badge">辆</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+                        <p class="layuiadmin-big-font" id="allCar">9,999,666</p>
+                        <p>
+                            有效车辆
+                            <span class="layuiadmin-span-color" ><span id="ableCar">88万</span> <i class="layui-inline layui-icon layui-icon-flag"></i></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        总用户
+                        <span class="layui-badge layui-bg-cyan layuiadmin-badge">人</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+                        <p class="layuiadmin-big-font" id="allUser">33,555</p>
+                        <p>
+                            普通用户
+                            <span class="layuiadmin-span-color"><span id="ordUser"></span><i class="layui-inline layui-icon layui-icon-user"></i></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        总驾驶员
+                        <span class="layui-badge layui-bg-green layuiadmin-badge">人</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+
+                        <p class="layuiadmin-big-font" id="allDriver">999,666</p>
+                        <p>
+                            有效驾驶员
+                            <span class="layuiadmin-span-color"><span id="ableDriver"> </span> <i class="layui-inline layui-icon layui-icon-user"></i></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        车辆品牌数
+                        <span class="layui-badge layui-bg-orange layuiadmin-badge">种</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+
+                        <p class="layuiadmin-big-font" id="allCarModel">66,666</p>
+                        <p>
+                            车辆分类
+                            <span class="layuiadmin-span-color"><span id="allCartype">120</span> <i class="layui-inline layui-icon layui-icon-user"></i></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        访问次数
+                        <span class="layui-badge layui-bg-blue layuiadmin-badge">次</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+                        <p class="layuiadmin-big-font" id="onlineUser">9,999,666</p>
+                        <p>
+                            管理员数量
+                            <span class="layuiadmin-span-color" ><span id="adminUser">88万</span> <i class="layui-inline layui-icon layui-icon-user"></i></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        申请单数
+                        <span class="layui-badge layui-bg-cyan layuiadmin-badge">单</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+                        <p class="layuiadmin-big-font" id="appNum">33,555</p>
+                        <p>
+                            完成单数
+                            <span class="layuiadmin-span-color"><span id="finishNum">2000</span><i class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        罚单数量
+                        <span class="layui-badge layui-bg-green layuiadmin-badge">单</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+
+                        <p class="layuiadmin-big-font" id="ticket">999,666</p>
+                        <p>
+                            总罚款
+                            <span class="layuiadmin-span-color"><span id="penalty">2000</span> <i class="layui-inline layui-icon layui-icon-dollar"></i></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        油卡数量
+                        <span class="layui-badge layui-bg-orange layuiadmin-badge">个</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+
+                        <p class="layuiadmin-big-font" id="olicard">66,666</p>
+                        <p>
+                            油卡消费
+                            <span class="layuiadmin-span-color"><span id="olicardCost">2000</span> <i class="layui-inline layui-icon layui-icon-dollar"></i></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm12">
+                <div class="layui-card">
+                    <div class="layui-card-header">数据概览</div>
+                    <div class="layui-card-body">
+                        <!--轮播-->
+                        <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-dataview">
+                            <div class="layui-carousel" id="test1">
+                                <div carousel-item>
+                                    <div><div id="getCartypeDate" style="width:100%;height: 280px"></div></div>
+                                    <div><div id="getCarModelDate" style="width:1000%;height: 280px"></div></div>
+                                    <div><div id="getCarStateDate" style="width:1000%;height: 280px"></div></div>
+                                    <div><div id="getUserDate" style="width:1000%;height: 280px"></div></div>
+                                    <div><div id="getConsumption" style="width:1000%;height: 280px"></div></div>
+                                    <div><div id="getTicket" style="width:1000%;height: 280px"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/echarts/echarts.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script th:inline="none">
+    layui.config({
+        version: '1584613945938' //为了更新 js 缓存，可忽略
+    });
+
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function() {
+        var laydate = layui.laydate //日期
+            , laypage = layui.laypage //分页
+            , layer = layui.layer //弹层
+            , table = layui.table //表格
+            , form = layui.form //表单
+            , carousel = layui.carousel //轮播
+            , upload = layui.upload //上传
+            , element = layui.element //元素操作
+            , slider = layui.slider //滑块
+
+
+        //查询总车辆
+        $.ajax({
+            type:'post',
+            url:'/car/carinfo/countCar',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#allCar").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //查询有效车辆
+        $.ajax({
+            type:'post',
+            url:'/car/carinfo/ableCar',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#ableCar").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //查询总用户数
+        $.ajax({
+            type:'post',
+            url:'/car/user/countUser',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#allUser").text(data.data);
+                    $("#allUser2").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //查询普通用户数量
+        $.ajax({
+            type:'post',
+            url:'/car/user/ordUser',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#ordUser").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //查询所有驾驶员
+        $.ajax({
+            type:'post',
+            url:'/car/driver/countDriver',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#allDriver").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //查询有效驾驶员
+        $.ajax({
+            type:'post',
+            url:'/car/driver/ableDriver',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#ableDriver").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //车辆品牌总数
+        $.ajax({
+            type:'post',
+            url:'/car/modelinfo/countModel',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#allCarModel").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //车辆分类总数
+        $.ajax({
+            type:'post',
+            url:'/car/cartypeinfo/countCartype',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#allCartype").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //在线人数
+        $.ajax({
+            type:'post',
+            url:'/car/user/online',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#onlineUser").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //申请单数
+        $.ajax({
+            type:'post',
+            url:'/car/approver/getAppNum',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#appNum").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //完成单数
+        $.ajax({
+            type:'post',
+            url:'/car/dispatch/getFinishNum',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#finishNum").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //罚单数
+        $.ajax({
+            type:'post',
+            url:'/car/infraccion/getTicket',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#ticket").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //罚款数
+        $.ajax({
+            type:'post',
+            url:'/car/infraccion/getPenalty',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#penalty").text(((data.data)/10000)+"万元");
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //加油卡数
+        $.ajax({
+            type:'post',
+            url:'/car/card/getOlicardNum',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#olicard").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //加油卡消费
+        $.ajax({
+            type:'post',
+            url:'/car/cardlog/getOlicardCost',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#olicardCost").text(((data.data)/10000)+"万元");
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //获取管理员数
+        $.ajax({
+            type:'post',
+            url:'/car/user/getAdminUserNum',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    $("#adminUser").text(data.data);
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //轮播
+        var ins = carousel.render({
+            elem: '#test1'
+            ,width: '100%' //设置容器宽度
+            ,arrow: 'always' //始终显示箭头
+            //,anim: 'updown' //切换动画方式
+        });
+        //echarts数据统计
+        //每个车辆类型有多量车
+        var myChart = echarts.init(document.getElementById('getCartypeDate'));
+            myChart.setOption({
+            color: ['#3398DB'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            }, title : {
+                    show:true,//显示策略，默认值true,可选为：true（显示） | false（隐藏）
+                    text: '类型-车辆',//主标题文本，'\n'指定换行
+                },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: [1,2,3,4,5,6,7],
+                    axisLabel: {
+                        interval:0
+                    },//强制显示所有标签
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '数量',
+                    type: 'bar',
+                    barWidth: '60%',
+                    data: [10, 52, 200, 334, 390, 330, 220]
+                }
+            ]
+        });
+        // 异步加载数据
+        myChart.showLoading();
+        $.ajax({
+            type:'get',
+            url:'/car/cartypeinfo/getCartypeDate',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                //定义两个数字
+                var nameArr =[]
+                var numberArr =[]
+                for(var i=0;i<data.data.length;i++){
+                    nameArr.push(data.data[i].name)
+                    numberArr.push(data.data[i].number)
+                }
+                // 填入数据
+                myChart.hideLoading();
+                myChart.setOption({
+                    xAxis: {
+                        type: 'category',
+                        data: nameArr
+                    },
+                    series: [{
+                        // 根据名字对应到相应的系列
+                        name: '数量',
+                        data: numberArr
+                    }]
+                });
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //每个车辆品牌车辆数
+        var myChart2 = echarts.init(document.getElementById('getCarModelDate'));
+        myChart2.setOption({
+            color: ['#3398DB'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            title : {
+                show:true,//显示策略，默认值true,可选为：true（显示） | false（隐藏）
+                text: '品牌-车辆',//主标题文本，'\n'指定换行
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: [1,2,3,4,5,6,7],
+                    axisLabel: {
+                        interval:0
+                    },//强制显示所有标签
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '数量',
+                    type: 'bar',
+                    barWidth: '60%',
+                    data: [10, 52, 200, 334, 390, 330, 220]
+                }
+            ]
+        });
+        // 异步加载数据
+        myChart2.showLoading();
+        $.ajax({
+            type:'get',
+            url:'/car/cartypeinfo/getCarModelDate',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    //定义两个数字
+                    var nameArr =[]
+                    var numberArr =[]
+                    for(var i=0;i<data.data.length;i++){
+                        nameArr.push(data.data[i].name)
+                        numberArr.push(data.data[i].number)
+                    }
+                    // 填入数据
+                    myChart2.hideLoading();
+                    myChart2.setOption({
+                        xAxis: {
+                            type: 'category',
+                            data: nameArr
+                        },
+                        series: [{
+                            // 根据名字对应到相应的系列
+                            name: '数量',
+                            data: numberArr
+                        }]
+                    });
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //车辆状况分布
+        var myChart3 = echarts.init(document.getElementById('getCarStateDate'));
+        myChart3.setOption({
+            title: {
+                text: '车辆状态分布',
+                left: 'center',
+                top: 20,
+                textStyle: {
+                    color: '#ccc'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 10,
+                data: ['0', '1', '2']
+            },
+            series: [
+                {
+                    name: '车辆状态',
+                    type: 'pie',
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '30',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [
+                        {value: 335, name: '0'},
+                        {value: 310, name: '1'},
+                        {value: 234, name: '2'}
+                    ]
+                }
+            ]
+        });
+        // 异步加载数据
+        myChart3.showLoading();
+        $.ajax({
+            type:'get',
+            url:'/car/carinfo/getCarStateDate',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    //定义两个数字
+                    var nameArr =[]
+                    var dataArr =[]
+                    for(var i=0;i<data.data.length;i++){
+                        if(data.data[i].state == "0"){
+                            nameArr.push("损坏")
+                            var items = {
+                                value: data.data[i].number,
+                                name : "损坏"
+                            }
+                            dataArr.push(items)
+                        }
+                        if(data.data[i].state == "1"){
+                            nameArr.push("正常")
+                            var items = {
+                                value: data.data[i].number,
+                                name : "正常"
+                            }
+                            dataArr.push(items)
+                        }
+                        if(data.data[i].state == "2"){
+                            nameArr.push("借出")
+                            var items = {
+                                value: data.data[i].number,
+                                name : "借出"
+                            }
+                            dataArr.push(items)
+                        }
+                    }
+                    // 填入数据
+                    myChart3.hideLoading();
+                    myChart3.setOption({
+                        legend:{
+                            data:nameArr
+                        },
+                        series: [
+                            {
+                                name: '车辆状态',
+                                type: 'pie',
+                                radius: ['50%', '70%'],
+                                avoidLabelOverlap: false,
+                                label: {
+                                    show: false,
+                                    position: 'center'
+                                },
+                                emphasis: {
+                                    label: {
+                                        show: true,
+                                        fontSize: '30',
+                                        fontWeight: 'bold'
+                                    }
+                                },
+                                labelLine: {
+                                    show: false
+                                },
+                                data:dataArr
+                            }
+                        ]
+                    });
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+        //角色分布男女分布部门分布
+        var myChart4 = echarts.init(document.getElementById('getUserDate'));
+        myChart4.setOption({
+            title:{
+                text:"角色-性别-部门",
+                bottom:0
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 10,
+                data: ['男', '女', '超级管理员', '管理员', '普通用户', '老板', '总经理', '员工']
+            },
+            series: [
+                {
+                    name: '角色人数',
+                    type: 'pie',
+                    selectedMode: 'single',
+                    radius: [0, '30%'],
+
+                    label: {
+                        position: 'inner'
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [
+                        {value: 1, name: '超级管理员', selected: true},
+                        {value: 6, name: '管理员'},
+                        {value: 25, name: '普通用户'}
+                    ]
+                },
+                {
+                    name: '性别分布',
+                    type: 'pie',
+                    radius: ['40%', '55%'],
+                    label: {
+                        formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+                        backgroundColor: '#eee',
+                        borderColor: '#aaa',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        // shadowBlur:3,
+                        // shadowOffsetX: 2,
+                        // shadowOffsetY: 2,
+                        // shadowColor: '#999',
+                        // padding: [0, 7],
+                        rich: {
+                            a: {
+                                color: '#999',
+                                lineHeight: 22,
+                                align: 'center'
+                            },
+                            // abg: {
+                            //     backgroundColor: '#333',
+                            //     width: '100%',
+                            //     align: 'right',
+                            //     height: 22,
+                            //     borderRadius: [4, 4, 0, 0]
+                            // },
+                            hr: {
+                                borderColor: '#aaa',
+                                width: '100%',
+                                borderWidth: 0.5,
+                                height: 0
+                            },
+                            b: {
+                                fontSize: 16,
+                                lineHeight: 33
+                            },
+                            per: {
+                                color: '#eee',
+                                backgroundColor: '#334455',
+                                padding: [2, 4],
+                                borderRadius: 2
+                            }
+                        }
+                    },
+                    data: [
+                        {value: 20, name: '男'},
+                        {value: 30, name: '女'},
+                    ]
+                },
+                {
+                    name: '部门分布',
+                    type: 'pie',
+                    radius: ['60%', '80%'],
+                    label: {
+                        formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+                        backgroundColor: '#eee',
+                        borderColor: '#aaa',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        // shadowBlur:3,
+                        // shadowOffsetX: 2,
+                        // shadowOffsetY: 2,
+                        // shadowColor: '#999',
+                        // padding: [0, 7],
+                        rich: {
+                            a: {
+                                color: '#999',
+                                lineHeight: 22,
+                                align: 'center'
+                            },
+                            // abg: {
+                            //     backgroundColor: '#333',
+                            //     width: '100%',
+                            //     align: 'right',
+                            //     height: 22,
+                            //     borderRadius: [4, 4, 0, 0]
+                            // },
+                            hr: {
+                                borderColor: '#aaa',
+                                width: '100%',
+                                borderWidth: 0.5,
+                                height: 0
+                            },
+                            b: {
+                                fontSize: 16,
+                                lineHeight: 33
+                            },
+                            per: {
+                                color: '#eee',
+                                backgroundColor: '#334455',
+                                padding: [2, 4],
+                                borderRadius: 2
+                            }
+                        }
+                    },
+                    data: [
+                        {value: 1, name: '老板'},
+                        {value: 20, name: '总经理'},
+                        {value: 30, name: '员工'},
+                    ]
+                }
+            ]
+        });
+        // 异步加载数据
+        myChart4.showLoading();
+        var allName =[]
+        $.ajax({
+            type:'get',
+            url:'/car/user/getSexDate',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                if (data.status == "200"){
+                    //定义两个数字
+                    var dataArr =[]
+                    for(var i=0;i<data.data.length;i++){
+                        if(data.data[i].name == "0"){
+                            allName.push("男")
+                            var items = {
+                                value: data.data[i].value,
+                                name : "男"
+                            }
+                            dataArr.push(items)
+                        }
+                        if(data.data[i].name == "1"){
+                            allName.push("女")
+                            var items = {
+                                value: data.data[i].value,
+                                name : "女"
+                            }
+                            dataArr.push(items)
+                        }
+                    }
+                    // 填入数据
+                    myChart4.hideLoading();
+                    myChart4.setOption({
+                        series: [
+                            {
+                                name: '性别分布',
+                                data: dataArr
+                            }
+                        ]
+                    });
+                }else{
+                    //
+                }
+            },
+            error:function () {
+                layer.alert("网络不佳，请稍后重试");
+            }
+        });
+
+        // 异步加载数据
+        myChart4.showLoading();
+
+        $.ajax({
+            type:'get',
+            url:'/car/user/getRoleDate',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                //定义两个数字
+                var dataArr =[]
+                for(var i=0;i<data.data.length;i++){
+                    allName.push(data.data[i].name)
+                    var items = {
+                        value: data.data[i].value,
+                        name : data.data[i].name
+                    }
+                    dataArr.push(items)
+                }
+                // 填入数据
+                myChart4.hideLoading();
+                myChart4.setOption({
+                    series: [
+                        {
+                            name: '角色分布',
+                            data: dataArr
+                        }
+                    ]
+                });
+            }
+        });
+        // 异步加载数据
+        myChart4.showLoading();
+        $.ajax({
+            type:'get',
+            url:'/car/user/getDepartmentDate',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                //定义两个数字
+                var dataArr =[]
+                for(var i=0;i<data.data.length;i++){
+                    allName.push(data.data[i].name)
+                    var items = {
+                        value: data.data[i].value,
+                        name : data.data[i].name
+                    }
+                    dataArr.push(items)
+                }
+                // 填入数据
+                myChart4.hideLoading();
+                myChart4.setOption({
+                    legend: {
+                        orient: 'vertical',
+                        left: 10,
+                        data: allName //将上面三个请求返回的数据全部遍历在赋值
+                    },
+                    series: [
+                        {
+                            name: '部门分布',
+                            data: dataArr
+                        }
+                    ]
+                });
+            }
+        });
+        //耗油率统计
+        var myChart5 = echarts.init(document.getElementById('getConsumption'));
+        var pathSymbols = {
+            car: 'path://M49.592,40.883c-0.053,0.354-0.139,0.697-0.268,0.963c-0.232,0.475-0.455,0.519-1.334,0.475 c-1.135-0.053-2.764,0-4.484,0.068c0,0.476,0.018,0.697,0.018,0.697c0.111,1.299,0.697,1.342,0.931,1.342h3.7 c0.326,0,0.628,0,0.861-0.154c0.301-0.196,0.43-0.772,0.543-1.78c0.017-0.146,0.025-0.336,0.033-0.56v-0.01 c0-0.068,0.008-0.154,0.008-0.25V41.58l0,0C49.6,41.348,49.6,41.09,49.592,40.883L49.592,40.883z M6.057,40.883 c0.053,0.354,0.137,0.697,0.268,0.963c0.23,0.475,0.455,0.519,1.334,0.475c1.137-0.053,2.762,0,4.484,0.068 c0,0.476-0.018,0.697-0.018,0.697c-0.111,1.299-0.697,1.342-0.93,1.342h-3.7c-0.328,0-0.602,0-0.861-0.154 c-0.309-0.18-0.43-0.772-0.541-1.78c-0.018-0.146-0.027-0.336-0.035-0.56v-0.01c0-0.068-0.008-0.154-0.008-0.25V41.58l0,0 C6.057,41.348,6.057,41.09,6.057,40.883L6.057,40.883z M49.867,32.766c0-2.642-0.344-5.224-0.482-5.507 c-0.104-0.207-0.766-0.749-2.271-1.773c-1.522-1.042-1.487-0.887-1.766-1.566c0.25-0.078,0.492-0.224,0.639-0.241 c0.326-0.034,0.345,0.274,1.023,0.274c0.68,0,2.152-0.18,2.453-0.48c0.301-0.303,0.396-0.405,0.396-0.672 c0-0.268-0.156-0.818-0.447-1.146c-0.293-0.327-1.541-0.49-2.273-0.585c-0.729-0.095-0.834,0-1.022,0.121 c-0.304,0.189-0.32,1.919-0.32,1.919l-0.713,0.018c-0.465-1.146-1.11-3.452-2.117-5.269c-1.103-1.979-2.256-2.599-2.737-2.754 c-0.474-0.146-0.904-0.249-4.131-0.576c-3.298-0.344-5.922-0.388-8.262-0.388c-2.342,0-4.967,0.052-8.264,0.388 c-3.229,0.336-3.66,0.43-4.133,0.576s-1.633,0.775-2.736,2.754c-1.006,1.816-1.652,4.123-2.117,5.269L9.87,23.109 c0,0-0.008-1.729-0.318-1.919c-0.189-0.121-0.293-0.225-1.023-0.121c-0.732,0.104-1.98,0.258-2.273,0.585 c-0.293,0.327-0.447,0.878-0.447,1.146c0,0.267,0.094,0.379,0.396,0.672c0.301,0.301,1.773,0.48,2.453,0.48 c0.68,0,0.697-0.309,1.023-0.274c0.146,0.018,0.396,0.163,0.637,0.241c-0.283,0.68-0.24,0.524-1.764,1.566 c-1.506,1.033-2.178,1.566-2.271,1.773c-0.139,0.283-0.482,2.865-0.482,5.508s0.189,5.02,0.189,5.86c0,0.354,0,0.976,0.076,1.565 c0.053,0.354,0.129,0.697,0.268,0.966c0.232,0.473,0.447,0.516,1.334,0.473c1.137-0.051,2.779,0,4.477,0.07 c1.135,0.043,2.297,0.086,3.33,0.11c2.582,0.051,1.826-0.379,2.928-0.36c1.102,0.016,5.447,0.196,9.424,0.196 c3.976,0,8.332-0.182,9.423-0.196c1.102-0.019,0.346,0.411,2.926,0.36c1.033-0.018,2.195-0.067,3.332-0.11 c1.695-0.062,3.348-0.121,4.477-0.07c0.886,0.043,1.103,0,1.332-0.473c0.132-0.269,0.218-0.611,0.269-0.966 c0.086-0.592,0.078-1.213,0.078-1.565C49.678,37.793,49.867,35.408,49.867,32.766L49.867,32.766z M13.219,19.735 c0.412-0.964,1.652-2.9,2.256-3.244c0.145-0.087,1.426-0.491,4.637-0.706c2.953-0.198,6.217-0.276,7.73-0.276 c1.513,0,4.777,0.078,7.729,0.276c3.201,0.215,4.502,0.611,4.639,0.706c0.775,0.533,1.842,2.28,2.256,3.244 c0.412,0.965,0.965,2.858,0.861,3.116c-0.104,0.258,0.104,0.388-1.291,0.275c-1.387-0.103-10.088-0.216-14.185-0.216 c-4.088,0-12.789,0.113-14.184,0.216c-1.395,0.104-1.188-0.018-1.291-0.275C12.254,22.593,12.805,20.708,13.219,19.735 L13.219,19.735z M16.385,30.511c-0.619,0.155-0.988,0.491-1.764,0.482c-0.775,0-2.867-0.353-3.314-0.371 c-0.447-0.017-0.842,0.302-1.076,0.362c-0.23,0.06-0.688-0.104-1.377-0.318c-0.688-0.216-1.092-0.155-1.316-1.094 c-0.232-0.93,0-2.264,0-2.264c1.488-0.068,2.928,0.069,5.621,0.826c2.693,0.758,4.191,2.213,4.191,2.213 S17.004,30.357,16.385,30.511L16.385,30.511z M36.629,37.293c-1.23,0.164-6.386,0.207-8.794,0.207c-2.412,0-7.566-0.051-8.799-0.207 c-1.256-0.164-2.891-1.67-1.764-2.865c1.523-1.627,1.24-1.576,4.701-2.023C24.967,32.018,27.239,32,27.834,32 c0.584,0,2.865,0.025,5.859,0.404c3.461,0.447,3.178,0.396,4.699,2.022C39.521,35.623,37.887,37.129,36.629,37.293L36.629,37.293z  M48.129,29.582c-0.232,0.93-0.629,0.878-1.318,1.093c-0.688,0.216-1.145,0.371-1.377,0.319c-0.231-0.053-0.627-0.371-1.074-0.361 c-0.448,0.018-2.539,0.37-3.313,0.37c-0.772,0-1.146-0.328-1.764-0.481c-0.621-0.154-0.966-0.154-0.966-0.154 s1.49-1.464,4.191-2.213c2.693-0.758,4.131-0.895,5.621-0.826C48.129,27.309,48.361,28.643,48.129,29.582L48.129,29.582z',
+        };
+        myChart5.setOption({
+            title:{
+                text:"车辆耗油率"
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'none'
+                },
+                formatter: function (params) {
+                    return params[0].name + ': ' + params[0].value;
+                }
+            },
+            xAxis: {
+                data: ['黑E12345','黑E22222','黑E55555','黑E88888'],
+                axisTick: {show: false},
+                axisLine: {show: false},
+                axisLabel: {
+                    color: '#e54035'
+                }
+            },
+            yAxis: {
+                splitLine: {show: false},
+                axisTick: {show: false},
+                axisLine: {show: false},
+                axisLabel: {show: false}
+            },
+            color: ['#e54035'],
+            series: [{
+                name: 'hill',
+                type: 'pictorialBar',
+                barCategoryGap: '-130%',
+                // symbol: 'path://M0,10 L10,10 L5,0 L0,10 z',
+                symbol: 'path://M0,10 L10,10 C5.5,10 5.5,5 5,0 C4.5,5 4.5,10 0,10 z',
+                itemStyle: {
+                    opacity: 0.5
+                },
+                emphasis: {
+                    itemStyle: {
+                        opacity: 1
+                    }
+                },
+                data: [9,10,11,12],
+                z: 10
+            }, {
+                name: '车辆耗油率',
+                type: 'pictorialBar',
+                barGap: '-100%',
+                symbolPosition: 'end',
+                symbolSize: 50,
+                symbolOffset: [0, '-120%'],
+                data: [ {
+                    value: 9,
+                    symbol: pathSymbols.car,
+                    symbolSize: [40, 30]
+                },
+                    {
+                        value: 10,
+                        symbol: pathSymbols.car,
+                        symbolSize: [40, 30]
+                    },
+                    {
+                        value: 11,
+                        symbol: pathSymbols.car,
+                        symbolSize: [40, 30]
+                    },
+                    {
+                        value: 12,
+                        symbol: pathSymbols.car,
+                        symbolSize: [40, 30]
+                    }
+                ]
+            }]
+        });
+        myChart5.showLoading();
+        $.ajax({
+            type:'get',
+            url:'/car/carinfo/getConsumption',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                //定义两个数字
+                var dataArr = []
+                var nameArr = []
+                var valueArr = []
+                for(var i=0;i<data.data.length;i++){
+                    nameArr.push(data.data[i].name)
+                    valueArr.push(data.data[i].value)
+                    var items = {
+                        value: data.data[i].value,
+                        symbol: pathSymbols.car,
+                        symbolSize: [40, 30]
+                    }
+                    dataArr.push(items)
+                }
+                // 填入数据
+                myChart5.hideLoading();
+                myChart5.setOption({
+                    xAxis: {
+                        data: nameArr,
+                        axisTick: {show: false},
+                        axisLine: {show: false},
+                        axisLabel: {
+                            color: '#e54035'
+                        }
+                    },
+                    yAxis: {
+                        splitLine: {show: false},
+                        axisTick: {show: false},
+                        axisLine: {show: false},
+                        axisLabel: {show: false}
+                    },
+                    color: ['#e54035'],
+                    series: [{
+                        name: 'hill',
+                        type: 'pictorialBar',
+                        data: valueArr
+                    }, {
+                        name: '车辆耗油率',
+                        type: 'pictorialBar',
+                        data: dataArr
+                    }]
+                });
+            }
+        });
+        //时间罚单时间罚款
+        var myChart6 = echarts.init(document.getElementById('getTicket'));
+        data = [["2000-06-05",116],["2000-06-06",129],["2000-06-07",135],["2000-06-08",86],["2000-06-09",73],["2000-06-10",85],["2000-06-11",73],["2000-06-12",68],["2000-06-13",92],["2000-06-14",130],["2000-06-15",245],["2000-06-16",139],["2000-06-17",115],["2000-06-18",111],["2000-06-19",309],["2000-06-20",206],["2000-06-21",137],["2000-06-22",128],["2000-06-23",85],["2000-06-24",94],["2000-06-25",71],["2000-06-26",106],["2000-06-27",84],["2000-06-28",93],["2000-06-29",85],["2000-06-30",73],["2000-07-01",83],["2000-07-02",125],["2000-07-03",107],["2000-07-04",82],["2000-07-05",44],["2000-07-06",72],["2000-07-07",106],["2000-07-08",107],["2000-07-09",66],["2000-07-10",91],["2000-07-11",92],["2000-07-12",113],["2000-07-13",107],["2000-07-14",131],["2000-07-15",111],["2000-07-16",64],["2000-07-17",69],["2000-07-18",88],["2000-07-19",77],["2000-07-20",83],["2000-07-21",111],["2000-07-22",57],["2000-07-23",55],["2000-07-24",60]];
+        var dateList = data.map(function (item) {
+            return item[0];
+        });
+        var valueList = data.map(function (item) {
+            return item[1];
+        });
+        myChart6.setOption({
+            visualMap: [{
+                show: false,
+                type: 'continuous',
+                seriesIndex: 0,
+                min: 0,
+                max: 20000
+            }, {
+                show: false,
+                type: 'continuous',
+                seriesIndex: 1,
+                dimension: 0,
+                min: 0,
+                max: 5
+            }],
+
+
+            title: [{
+                left: 'center',
+                text: '时间-罚单数'
+            }, {
+                top: '55%',
+                left: 'center',
+                text: '时间-罚款数'
+            }],
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: [{
+                data: dateList //时间 name
+            }, {
+                data: dateList,//时间 name
+                gridIndex: 1
+            }],
+            yAxis: [{
+                splitLine: {show: false}
+            }, {
+                splitLine: {show: false},
+                gridIndex: 1
+            }],
+            grid: [{
+                bottom: '60%'
+            }, {
+                top: '60%'
+            }],
+            series: [{
+                type: 'line',
+                showSymbol: false,
+                data: valueList //value
+            }, {
+                type: 'line',
+                showSymbol: false,
+                data: valueList, //value
+                xAxisIndex: 1,
+                yAxisIndex: 1
+            }]
+        });
+        myChart6.showLoading();
+        var nameArr1 = []
+        var dataArr1 = []
+        var valueArr1 = []
+        $.ajax({
+            type:'get',
+            url:'/car/infraccion/selcetTicketAndTimeDate',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                for(var i=0;i<data.data.length;i++){
+                    nameArr1.push(data.data[i].name)
+                    valueArr1.push(data.data[i].value)
+                    var items = {
+                        value: data.data[i].value,
+                        name: data.data[i].name
+                    }
+                    dataArr1.push(items)
+                }
+                myChart6.setOption({
+                    visualMap: [{
+                        show: false,
+                        type: 'continuous',
+                        seriesIndex: 0,
+                        min: 0,
+                        max: 20000
+                    }, {
+                        show: false,
+                        type: 'continuous',
+                        seriesIndex: 1,
+                        dimension: 0,
+                        min: 0,
+                    }],
+
+
+                    title: [{
+                        left: 'center',
+                        text: '时间-罚单数'
+                    }, {
+                        top: '55%',
+                        left: 'center',
+                        text: '时间-罚款数'
+                    }],
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    yAxis: [{
+                        splitLine: {show: false}
+                    }, {
+                        splitLine: {show: false},
+                        gridIndex: 1
+                    }],
+                    grid: [{
+                        bottom: '60%'
+                    }, {
+                        top: '60%'
+                    }],
+                    series: [{
+                        name:'次数',
+                        type: 'line',
+                        showSymbol: false,
+                        data: valueArr1 //value
+                    }, {
+                        name:'罚款',
+                        type: 'line',
+                        showSymbol: false,
+                        data: valueArr2, //value
+                        xAxisIndex: 1,
+                        yAxisIndex: 1
+                    }]
+                });
+            }
+        });
+        var nameArr2 = []
+        var dataArr2 = []
+        var valueArr2 = []
+        $.ajax({
+            type:'get',
+            url:'/car/infraccion/selcetTicketCostAndTimeDate',
+            dataType:'json',
+            contentType:'application/json',
+            success:function (data) {
+                for(var i=0;i<(data.data.length);i++){
+                    nameArr2.push(data.data[i].name)
+                    valueArr2.push(data.data[i].value)
+                    var items = {
+                        value: data.data[i].value,
+                        name: data.data[i].name
+                    }
+                    dataArr2.push(items)
+                }
+                myChart6.hideLoading();
+                myChart6.setOption({
+                    visualMap: [{
+                        show: false,
+                        type: 'continuous',
+                        seriesIndex: 0,
+                        min: 0,
+                        max: 20000
+                    }, {
+                        show: false,
+                        type: 'continuous',
+                        seriesIndex: 1,
+                        dimension: 0,
+                        min: 0,
+                        max: nameArr2.length - 1
+                    }],
+
+
+                    title: [{
+                        left: 'center',
+                        text: '时间-罚单数'
+                    }, {
+                        top: '55%',
+                        left: 'center',
+                        text: '时间-罚款数'
+                    }],
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    xAxis: [{
+                        data: nameArr2 //时间 name
+                    }, {
+                        data: nameArr2,//时间 name
+                        gridIndex: 1
+                    }],
+                    yAxis: [{
+                        splitLine: {show: false}
+                    }, {
+                        splitLine: {show: false},
+                        gridIndex: 1
+                    }],
+                    grid: [{
+                        bottom: '60%'
+                    }, {
+                        top: '60%'
+                    }],
+                    series: [{
+                        name:'次数',
+                        type: 'line',
+                        showSymbol: false,
+                        data: valueArr1 //value
+                    }, {
+                        name:'罚款',
+                        type: 'line',
+                        showSymbol: false,
+                        data: valueArr2, //value
+                        xAxisIndex: 1,
+                        yAxisIndex: 1
+                    }]
+                });
+            }
+        });
+    })
+</script>
+</body>
+</html>

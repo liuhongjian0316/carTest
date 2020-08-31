@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>elasticsearch联系</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/car/static/mystyle/css/admin.css" media="all">
+</head>
+<body>
+<div class="layui-fluid">
+    <input type="text" name="parm" id="parm">
+    <button type="button" class="layui-btn layui-btn-normal" onclick="search()">搜索</button>
+</div>
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script>
+    layui.config({
+        version: '1584613945938' //为了更新 js 缓存，可忽略
+    });
+    layui.use(['layer','jquery','element','form','laypage','laydate','table'], function() {
+        var layer = layui.layer;
+        var element = layui.element;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var laypage = layui.laypage;
+        var laydate = layui.laydate;
+        var table = layui.table;
+        console.log(parm)
+        window.search = function () {
+            var parm = $('#parm').val();
+            $.ajax({
+                type:'get',
+                url:'/car/search/searchparm?parm='+parm,
+                dataType:'json',
+                contentType:'application/json',
+                success:function (data) {
+
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;max-height: 100%">
+    <table class="layui-hide" id="demo" lay-filter="test" lay-data="test"></table>
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="return">入库</a>
+    </script>
+</div>
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script th:inline="none">
+    layui.use(['layer','jquery','element','form','laypage','laydate','table'], function(){
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        var element = layui.element;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var laypage = layui.laypage;
+        var laydate = layui.laydate;
+        var table = layui.table;
+
+
+    //执行一个 table 实例
+    table.render({
+        elem: '#demo'
+        ,height: 420
+        ,url: '/car/dispatch/unreturn'//数据接口
+        ,title: '申请表'
+        ,page: true //开启分页
+        ,limits:[5,10,15,20]
+        ,cols: [[ //表头
+            {type: 'checkbox', fixed: 'left'}
+            ,{field: 'dispatchid', title: 'ID', width:100, sort: true, fixed: 'left'}
+            ,{field: 'drivername', title: '申请人', width:100, sort: true, fixed: 'left'}
+            ,{field: 'carNumber', title: '车牌号', width:200, sort: true, fixed: 'left'}
+            ,{field: 'actualtime', title: '开始时间', width:200, sort: true, fixed: 'left'}
+            ,{fixed: 'right', title:'操作', width: 165, align:'center', toolbar: '#barDemo'}
+        ]]
+    });
+    //监听行工具事件
+    table.on('tool(test)', function(obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+        var data = obj.data //获得当前行数据
+            , layEvent = obj.event; //获得 lay-event 对应的值
+        if (layEvent === 'return') {
+            var loginLoadIndex = layer.load(2);
+            $.ajax({
+                type: 'get',
+                url: '/car/dispatch/returnCar?carNumber='+data.carNumber+'&dispatchid='+data.dispatchid,
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (data) {
+                    layer.close(loginLoadIndex);
+                    if (data.status == "200") {
+                        layer.close(loginLoadIndex);
+                        layer.msg('入库成功');
+                        table.reload('demo', {
+                            url: '/car/dispatch/unreturn'
+                            , where: {} //设定异步数据接口的额外参数
+                        });
+                    } else {
+                        layer.close(loginLoadIndex);
+                        layer.alert("入库失败");
+                    }
+                },
+                error: function () {
+                    layer.close(loginLoadIndex);
+                    layer.alert("网络不佳，请稍后重试");
+                }
+            });
+        }
+    })
+
+    });
+
+</script>
+</body>
+</html>

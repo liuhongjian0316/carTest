@@ -1,0 +1,19 @@
+
+k
+java:S20950"IUse try-with-resources or close this "PrintWriter" in a "finally" clause.(æ¢™úÿÿÿÿ8¼×‚ÍÃ.
+p
+java:S1128"NRemove this unused import 'org.springframework.data.redis.core.RedisTemplate'.(–ª¡Çøÿÿÿÿ8ç²ÙÌÃ.
+b
+java:S22594"@A "NullPointerException" could be thrown; "fw" is nullable here.(¯¡½ãıÿÿÿÿ8¼×‚ÍÃ.
+J
+java:S1481"(Remove this unused "sdf" local variable.(Ğ½Œñúÿÿÿÿ8†«ÇÌÃ.
+H
+java:S1128"+Remove this unused import 'java.util.Date'.(¸…¼ü8¤»ƒÍÃ.
+I
+java:S1481'"-Remove this unused "publicip" local variable.(×Âûv8¤»ƒÍÃ.
+I
+java:S1602",Remove useless curly braces around statement(¥îÁ£8îÒŒèÃ.
+^
+java:S1128"<Remove this unused import 'work.aijiu.common.utils.IpUtils'.(ª¦«Õüÿÿÿÿ8ŒƒÍÃ.
+M
+java:S1128"+Remove this unused import 'java.util.UUID'.(ÀãÄ£úÿÿÿÿ8¤»ƒÍÃ.

@@ -1,0 +1,29 @@
+
+L
+java:S1874"/Remove this use of "Integer"; it is deprecated.(»÷äĞ8À™š³³.
+
+java:S1989G"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(üÒ§´8¡ĞØ³³.
+V
+java:S4719S"9Replace charset name argument with StandardCharsets.UTF_8(š­‘ª8šŠí³³.
+m
+java:S19896"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8©ĞĞ¯³.
+t
+java:S2226"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(¥Éõ]8ê÷Ç¯³.
+m
+java:S1989"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8Ù³Ğ¯³.
+…
+java:S19894"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8©ĞĞ¯³.
+
+java:S1989="dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(üÒ§´8 ğ¾³³.
+R
+java:S1874¥"/Remove this use of "Integer"; it is deprecated.(¹ı¦äüÿÿÿÿ8Ö÷ù³³.
+Q
+java:S1874`"/Remove this use of "Integer"; it is deprecated.(Îâ§ÿşÿÿÿÿ8ñÉñ³³.
+L
+java:S1874"/Remove this use of "Integer"; it is deprecated.(»÷äĞ8Ú¹™³³.
+z
+java:S2226"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(ûÊºÉıÿÿÿÿ8´—º.
+M
+java:S1874"/Remove this use of "Integer"; it is deprecated.(·¾û³8ŸÁÒ³³.
+…
+java:S1989"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8Ù³Ğ¯³.

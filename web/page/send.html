@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/car/static/layui/css/layui.css">
+    <style>
+        .gradient{
+            background: -moz-linear-gradient(top, #bd9999 0%, #b43f3f 100%);
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#bd9999), color-stop(100%,#b43f3f));
+            background: -webkit-linear-gradient(top, #bd9999 0%,#b43f3f 100%);
+            background: -o-linear-gradient(top, #bd9999 0%,#b43f3f 100%);
+            background: -ms-linear-gradient(top, #bd9999 0%,#b43f3f 100%);
+            background: linear-gradient(to bottom, #bd9999 0%,#b43f3f 100%);
+        }
+    </style>
+</head>
+<body>
+<div style="padding: 20px; background-color: #F2F2F2;max-height: 100%">
+    <div>
+
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-service">派车服务</i>
+            <span id="msg" style="margin-left: 40%;color: red">暂没有待处理事件</span>
+        </div>
+    </div>
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请人姓名</label>
+            <div class="layui-input-block">
+                <select name="drivername" lay-verify="required" id="drivername"lay-search>
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">车牌号</label>
+            <div class="layui-input-block">
+                <select name="carNumber" lay-verify="required" id="plateNumber" lay-search>
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a class="layui-btn" lay-submit lay-filter="formDemo">立即提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="/car/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/car/static/layui/layui.js"></script>
+<script th:inline="none">
+    layui.use(['layer','jquery','element','form','laypage','laydate','table'], function() {
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        var element = layui.element;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var laypage = layui.laypage;
+        var laydate = layui.laydate;
+        var table = layui.table;
+
+        //下拉框初始化（未被借走和正常的车牌号）
+        $.ajax({
+            url: '/car/carinfo/selplateNumberByState',
+            dataType: 'json',
+            type: 'post',
+            contentType:'application/json',
+            success: function (data) {
+                $.each(data.data, function (index, item) {
+                    $('#plateNumber').append(new Option(item.plateNumber, item.plateNumber));// 下拉菜单里添加元素
+                });
+                layui.form.render("select");
+            }
+        })
+        var session_name = null;
+        var session_id = null;
+        var session_departmentid = null;
+        var session_tel = null;
+        //获取sesson
+        $.ajax({
+            url: '/car/user/getsesson',
+            dataType: 'json',
+            type: 'get',
+            contentType: 'json',
+            async: false,
+            success: function (data) {
+                session_name = data[0].userName;
+                session_id = data[0].userinfoid;
+                session_departmentid = data[0].departName;
+                session_tel = data[0].tel;
+                //下拉框初始化（申请人的姓名状态）
+                $.ajax({
+                    url: '/car/dispatch/getApproverName?departmentId='+data[0].departName,
+                    dataType: 'json',
+                    type: 'post',
+                    contentType:'application/json',
+                    success: function (data) {
+                        $.each(data.data, function (index, item) {
+                            $('#drivername').append(new Option(item.applicationName, item.applicationName));// 下拉菜单里添加元素
+                        });
+                        if(data.data.length>0){
+                            layer.msg("有"+data.data.length+"个人待派车");
+                            $('#msg').html("有"+data.data.length+"个人待派车")
+                        }
+                        layui.form.render("select");
+                    }
+                })
+            }
+        });
+        //提交按钮
+        form.on('submit(formDemo)', function(data){
+            var loginLoadIndex = layer.load(2);
+            $.ajax({
+                type:'post',
+                url:'/car/carinfo/sendCar',
+                dataType:'json',
+                data:JSON.stringify(data.field),
+                contentType:'application/json',
+                success:function (data) {
+                    layer.close(loginLoadIndex);
+                    if (data.status == "200"){
+                        layer.msg("派车成功");
+                    }else{
+                        layer.close(loginLoadIndex);
+                        layer.alert("派车失败！！！！");
+                    }
+                },
+                error:function () {
+                    layer.close(loginLoadIndex);
+                    layer.alert("您的网络不好，请稍后重试");
+                }
+            });
+        });
+
+
+        var ws;
+        //避免重复连接
+        var lockReconnect = false;
+        var wsUrl = "ws://localhost:8888/car/websocket";
+            createWebSocket(wsUrl);
+        function createWebSocket(url) {
+            try {
+                ws = new WebSocket(url);
+                initEventHandle();
+            } catch (e) {
+                //重新连接
+                reconnect(url);
+            }
+        }
+
+        window.initEventHandle = function(){
+            ws.onclose = function () {
+                console.info("连接关闭");
+                reconnect(wsUrl);
+            };
+            ws.onerror = function () {
+                console.info("传输异常");
+                reconnect(wsUrl);
+            };
+            ws.onopen = function () {
+                //心跳检测重置
+                heartCheck.reset().start();
+            };
+
+            ws.onmessage = function(event) {
+                console.info(event.data);
+                if(event.data=="1"){
+                    layer.alert("有新的任务要处理",{title:'来新消息了~~~',offset: 'rb',icon:'6'}, function (index) {
+                        layer.close(index);
+                        location.reload();
+                    });
+                }
+                //如果获取到消息，心跳检测重置
+                heartCheck.reset().start();
+            }
+        }
+        function reconnect(url) {
+            if(lockReconnect) return;
+            lockReconnect = true;
+            //没连接上会一直重连，设置延迟避免请求过多
+            setTimeout(function () {
+                createWebSocket(url);
+                lockReconnect = false;
+            }, 5000);
+        }
+        //心跳检测,每5s心跳一次
+        var heartCheck = {
+            timeout: 5000,
+            timeoutObj: null,
+            serverTimeoutObj: null,
+            reset: function(){
+                clearTimeout(this.timeoutObj);
+                clearTimeout(this.serverTimeoutObj);
+                return this;
+            },
+            start: function(){
+                var self = this;
+                this.timeoutObj = setTimeout(function(){
+                    //这里发送一个心跳，后端收到后，返回一个心跳消息，
+                    //onmessage拿到返回的心跳就说明连接正常
+                    self.serverTimeoutObj = setTimeout(function(){
+                        //如果超过一定时间还没重置，说明后端主动断开了
+
+                        ws.close();
+                        //如果onclose会执行reconnect，我们执行ws.close()就行了.
+                        //如果直接执行reconnect 会触发onclose导致重连两次
+                    }, self.timeout)
+                }, this.timeout)
+            }
+        }
+    });
+</script>
+</body>
+</html>

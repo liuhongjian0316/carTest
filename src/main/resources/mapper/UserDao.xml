@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="work.aijiu.dao.UserDao">
+
+    <select id="selUserByAccoundAndPwd" parameterType="String" resultType="work.aijiu.entity.User">
+        select * from t_userinfo where USERACCOUNT=#{userAccount} and PWD=#{pwd}
+    </select>
+    <select id="userPage" resultType="work.aijiu.entity.User">
+       select d.DEPART_NAME,r.name,u.* from t_userinfo u,t_depart d,t_role r where u.DEPART_NAME = d.DEPART_ID and u.role_id = r.id limit #{page},#{limit}
+    </select>
+    <insert id="insertUser">
+        insert into t_userinfo
+        (USERACCOUNT,USERNAME,PWD,SEX,TEL,ADDR,DEPART_NAME,role_id)
+        values
+        (#{userAccount},#{userName},#{pwd},#{sex},#{tel},#{addr},#{departName},#{roleid})
+    </insert>
+    <update id="update">
+        update t_userinfo set
+        USERACCOUNT = #{userAccount},
+        USERNAME = #{userName},
+        PWD = #{pwd},
+        SEX = #{sex},
+        TEL = #{tel},
+        ADDR = #{addr},
+        DEPART_NAME = #{departName}
+        <if test="roleid != null and roleid != ''">
+            ,role_id = #{roleid}
+        </if>
+
+        where
+        USERINFOID = #{userinfoid}
+    </update>
+    <delete id="delete">
+        delete from t_userinfo where USERINFOID = #{userinfoid}
+    </delete>
+    <select id="search" resultType="work.aijiu.entity.User">
+        select d.DEPART_NAME,r.name,u.* from t_userinfo u,t_depart d,t_role r
+        where u.DEPART_NAME = d.DEPART_ID and u.role_id = r.id and 1=1
+        <if test="userAccount !='' ">
+            and u.USERACCOUNT like CONCAT('%',#{userAccount},'%')
+        </if>
+        <if test="tel !='' ">
+            and u.TEL like CONCAT('%',#{tel},'%')
+        </if>
+        <if test="departName !='' ">
+            and u.DEPART_NAME = #{departName}
+        </if>
+
+        limit #{page},#{limit}
+    </select>
+    <update id="updateRole">
+        update t_userinfo set
+        role_id = #{roleid}
+        where USERINFOID = #{userinfoid}
+    </update>
+    <select id="selectRoleDate" resultType="java.util.Map">
+        select r.name name,count(u.role_id) value
+        from t_userinfo u, t_role r
+        where u.role_id = r.id
+        GROUP BY u.role_id
+    </select>
+    <select id="selectSexDate" resultType="java.util.Map">
+        select u.SEX name,count(u.SEX) value
+        from t_userinfo u
+        GROUP BY u.SEX
+    </select>
+    <select id="selectDeaprtmentDate" resultType="java.util.Map">
+        select d.DEPART_NAME name , count(u.DEPART_NAME) value
+        from t_userinfo u ,t_depart d
+        where u.DEPART_NAME = d.DEPART_ID
+        GROUP BY u.DEPART_NAME
+    </select>
+</mapper>

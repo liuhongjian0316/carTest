@@ -1,0 +1,65 @@
+
+m
+java:S1989/"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8”ÛûÃ.
+p
+java:S19897"SHandle the following exception that could be thrown by "updateState2": IOException.(•‰¥Ê8¸ÌüÃ.
+Q
+java:S1874@"/Remove this use of "Integer"; it is deprecated.(ú»áûÿÿÿÿ8”ÛûÃ.
+^
+java:S1117«";Rename "session" which hides the field declared at line 40.(ûİÙ¹şÿÿÿÿ8”ÛûÃ.
+z
+java:S2226#"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(…âÔêüÿÿÿÿ8”ÛûÃ.
+9
+java:S3626ò"Remove this redundant jump.(ÉŠ©ƒ8ŠÀèÄ.
+t
+java:S1989c"RHandle the following exception that could be thrown by "updateState": IOException.(ÙÑÖ¹úÿÿÿÿ8·æÖıÃ.
+{
+java:S2293&"YReplace the type specification in this constructor call with the diamond operator ("<>").(Ûâ¨îüÿÿÿÿ8”ÛûÃ.
+Q
+java:S1874@"/Remove this use of "Integer"; it is deprecated.(ú»áûÿÿÿÿ8”ÛûÃ.
+R
+java:S1172Ö"/Remove this unused method parameter "response".(§×áàúÿÿÿÿ8”ÛûÃ.
+9
+java:S3626È"Remove this redundant jump.(ûÁİ…8”ÛûÃ.
+9
+java:S3626æ"Remove this redundant jump.(ÉŠ©ƒ8ŠÀèÄ.
+…
+java:S1989-"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8”ÛûÃ.
+u
+java:S2226%"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(é¯×á8”ÛûÃ.
+M
+java:S1172ª"/Remove this unused method parameter "response".(»¦æÕ8”ÛûÃ.
+
+java:S1989W"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(³Ôñ¥8”ÛûÃ.
+u
+java:S2226!"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(ˆøëÈ8”ÛûÃ.
+9
+java:S3626ş"Remove this redundant jump.(ÉŠ©ƒ8“Ùš‘Ä.
+L
+java:S1874:"/Remove this use of "Integer"; it is deprecated.(­ –8”ÛûÃ.
+m
+java:S1989S"PHandle the following exception that could be thrown by "getWriter": IOException.(¾šçŞ8”ÛûÃ.
+L
+java:S18741"/Remove this use of "Integer"; it is deprecated.(şà¯À8”ÛûÃ.
+^
+java:S1117×";Rename "session" which hides the field declared at line 40.(ûİÙ¹şÿÿÿÿ8”ÛûÃ.
+n
+java:S1989s"QHandle the following exception that could be thrown by "toapplyfor": IOException.(ĞáÀ£8ìêèÄ.
+
+java:S1989h"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(³Ôñ¥8”ÛûÃ.
+
+java:S1989x"dHandle the following exception that could be thrown by "getJsonDatas": UnsupportedEncodingException.(³Ôñ¥8”ÛûÃ.
+9
+java:S3626ó"Remove this redundant jump.(ûÁİ…8”ÛûÃ.
+L
+java:S1874:"/Remove this use of "Integer"; it is deprecated.(­ –8”ÛûÃ.
+9
+java:S3626Ë"Remove this redundant jump.(ûÁİ…8”ÛûÃ.
+9
+java:S3626ö"Remove this redundant jump.(ûÁİ…8”ÛûÃ.
+L
+java:S18741"/Remove this use of "Integer"; it is deprecated.(şà¯À8”ÛûÃ.
+u
+java:S2226("XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(­³³³8”ÛûÃ.
+…
+java:S1989Q"cHandle the following exceptions that could be thrown by "setHeader": ServletException, IOException.(½´ì¢ÿÿÿÿÿ8”ÛûÃ.

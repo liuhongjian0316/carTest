@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="work.aijiu.dao.CartypeDao">
+    <insert id="addCartype" parameterType="String">
+        insert into t_cartype
+        (VEHICLE_CLASSNAME,COMMENT_INFO,STATE)
+        values
+        (#{vehicleClassname},#{commentInfo},#{state})
+    </insert>
+
+    <update id="editCartype" parameterType="String">
+        update t_cartype
+            set
+                VEHICLE_CLASSNAME = #{vehicleClassname},
+                COMMENT_INFO = #{commentInfo},
+                STATE = #{state}
+            where
+                CARTYPE_ID = #{cartypeId}
+
+    </update>
+
+    <delete id="delCartypeById" parameterType="String">
+        delete from t_cartype where  CARTYPE_ID = #{cartypeId}
+    </delete>
+
+
+
+
+
+</mapper>

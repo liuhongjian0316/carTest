@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="work.aijiu.dao.TDispatchDao">
+
+    <resultMap type="work.aijiu.entity.TDispatch" id="TDispatchMap">
+        <result property="dispatchid" column="dispatchid" jdbcType="INTEGER"/>
+        <result property="carNumber" column="car_Number" jdbcType="VARCHAR"/>
+        <result property="driverlicensenumber" column="driverLicenseNumber" jdbcType="VARCHAR"/>
+        <result property="drivername" column="driverName" jdbcType="VARCHAR"/>
+        <result property="usingtime" column="usingTime" jdbcType="VARCHAR"/>
+        <result property="actualtime" column="actualTime" jdbcType="VARCHAR"/>
+        <result property="applicationid" column="applicationid" jdbcType="VARCHAR"/>
+        <result property="applicationnumber" column="applicationNumber" jdbcType="VARCHAR"/>
+        <result property="runroute" column="runRoute" jdbcType="VARCHAR"/>
+        <result property="kmbefore" column="kmBefore" jdbcType="NUMERIC"/>
+        <result property="kmafter" column="kmAfter" jdbcType="NUMERIC"/>
+        <result property="toll" column="toll" jdbcType="NUMERIC"/>
+        <result property="beintime" column="beInTime" jdbcType="VARCHAR"/>
+        <result property="dispatchcommment" column="dispatchCommment" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="namestate" column="namestate" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TDispatchMap">
+        select
+          dispatchid, car_Number, driverLicenseNumber, driverName, usingTime, actualTime, applicationid, applicationNumber, runRoute, kmBefore, kmAfter, toll, beInTime, dispatchCommment,state,namestate
+        from carm.t_dispatch
+        where dispatchid = #{dispatchid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TDispatchMap">
+        select
+          dispatchid, car_Number, driverLicenseNumber, driverName, usingTime, actualTime, applicationid, applicationNumber, runRoute, kmBefore, kmAfter, toll, beInTime, dispatchCommment,state,namestate
+        from carm.t_dispatch
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TDispatchMap">
+        select
+          dispatchid, car_Number, driverLicenseNumber, driverName, usingTime, actualTime, applicationid, applicationNumber, runRoute, kmBefore, kmAfter, toll, beInTime, dispatchCommment,state,namestate
+        from carm.t_dispatch
+        <where>
+            <if test="dispatchid != null">
+                and dispatchid = #{dispatchid}
+            </if>
+            <if test="carNumber != null and carNumber != ''">
+                and car_Number = #{carNumber}
+            </if>
+            <if test="driverlicensenumber != null and driverlicensenumber != ''">
+                and driverLicenseNumber = #{driverlicensenumber}
+            </if>
+            <if test="drivername != null and drivername != ''">
+                and driverName = #{drivername}
+            </if>
+            <if test="usingtime != null and usingtime != ''">
+                and usingTime = #{usingtime}
+            </if>
+            <if test="actualtime != null and actualtime != ''">
+                and actualTime = #{actualtime}
+            </if>
+            <if test="applicationid != null and applicationid != ''">
+                and applicationid = #{applicationid}
+            </if>
+            <if test="applicationnumber != null and applicationnumber != ''">
+                and applicationNumber = #{applicationnumber}
+            </if>
+            <if test="runroute != null and runroute != ''">
+                and runRoute = #{runroute}
+            </if>
+            <if test="kmbefore != null">
+                and kmBefore = #{kmbefore}
+            </if>
+            <if test="kmafter != null">
+                and kmAfter = #{kmafter}
+            </if>
+            <if test="toll != null">
+                and toll = #{toll}
+            </if>
+            <if test="beintime != null and beintime != ''">
+                and beInTime = #{beintime}
+            </if>
+            <if test="dispatchcommment != null and dispatchcommment != ''">
+                and dispatchCommment = #{dispatchcommment}
+            </if>
+            <if test="state != null and state != ''">
+                and state = #{state}
+            </if>
+            <if test="namestate != null and namestate != ''">
+                and namestate = #{namestate}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="dispatchid" useGeneratedKeys="true">
+        insert into carm.t_dispatch(car_Number, driverLicenseNumber, driverName, usingTime, actualTime, applicationid, applicationNumber, runRoute, kmBefore, kmAfter, toll, beInTime, dispatchCommment,state,namestate)
+        values (#{carNumber}, #{driverlicensenumber}, #{drivername}, #{usingtime}, #{actualtime}, #{applicationid}, #{applicationnumber}, #{runroute}, #{kmbefore}, #{kmafter}, #{toll}, #{beintime}, #{dispatchcommment},#{state},#{namestate})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update carm.t_dispatch
+        <set>
+            <if test="carNumber != null and carNumber != ''">
+                car_Number = #{carNumber},
+            </if>
+            <if test="driverlicensenumber != null and driverlicensenumber != ''">
+                driverLicenseNumber = #{driverlicensenumber},
+            </if>
+            <if test="drivername != null and drivername != ''">
+                driverName = #{drivername},
+            </if>
+            <if test="usingtime != null and usingtime != ''">
+                usingTime = #{usingtime},
+            </if>
+            <if test="actualtime != null and actualtime != ''">
+                actualTime = #{actualtime},
+            </if>
+            <if test="applicationid != null and applicationid != ''">
+                applicationid = #{applicationid},
+            </if>
+            <if test="applicationnumber != null and applicationnumber != ''">
+                applicationNumber = #{applicationnumber},
+            </if>
+            <if test="runroute != null and runroute != ''">
+                runRoute = #{runroute},
+            </if>
+            <if test="kmbefore != null">
+                kmBefore = #{kmbefore},
+            </if>
+            <if test="kmafter != null">
+                kmAfter = #{kmafter},
+            </if>
+            <if test="toll != null">
+                toll = #{toll},
+            </if>
+            <if test="beintime != null and beintime != ''">
+                beInTime = #{beintime},
+            </if>
+            <if test="dispatchcommment != null and dispatchcommment != ''">
+                dispatchCommment = #{dispatchcommment},
+            </if>
+            <if test="state != null and state != ''">
+                state = #{state},
+            </if>
+            <if test="namestate != null and namestate != ''">
+                namestate = #{namestate},
+            </if>
+        </set>
+        where dispatchid = #{dispatchid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from carm.t_dispatch where dispatchid = #{dispatchid}
+    </delete>
+
+</mapper>

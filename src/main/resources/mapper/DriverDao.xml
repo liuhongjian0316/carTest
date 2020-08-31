@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="work.aijiu.dao.DriverDao">
+
+    <resultMap type="work.aijiu.entity.Driver" id="TDriverinfoMap">
+        <result property="driverinfoId" column="DRIVERINFO_ID" jdbcType="INTEGER"/>
+        <result property="drivinglicenseNumber" column="DRIVINGLICENSE_NUMBER" jdbcType="VARCHAR"/>
+        <result property="driverName" column="DRIVER_NAME" jdbcType="VARCHAR"/>
+        <result property="driverSex" column="DRIVER_SEX" jdbcType="VARCHAR"/>
+        <result property="driverAge" column="DRIVER_AGE" jdbcType="VARCHAR"/>
+        <result property="driverNumber" column="DRIVER_NUMBER" jdbcType="VARCHAR"/>
+        <result property="telNumber" column="TEL_NUMBER" jdbcType="VARCHAR"/>
+        <result property="driverAddress" column="DRIVER_ADDRESS" jdbcType="VARCHAR"/>
+        <result property="drivingType" column="DRIVING_TYPE" jdbcType="VARCHAR"/>
+        <result property="state" column="STATE" jdbcType="VARCHAR"/>
+        <result property="commentInfo" column="COMMENT_INFO" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" parameterType="String" resultType="work.aijiu.entity.Driver">
+        select
+          DRIVERINFO_ID, DRIVINGLICENSE_NUMBER, DRIVER_NAME, DRIVER_SEX, DRIVER_AGE, DRIVER_NUMBER, TEL_NUMBER, DRIVER_ADDRESS, DRIVING_TYPE, STATE, COMMENT_INFO
+        from carm.t_driverinfo
+        where DRIVERINFO_ID = #{driverinfoId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TDriverinfoMap">
+        select
+          DRIVERINFO_ID, DRIVINGLICENSE_NUMBER, DRIVER_NAME, DRIVER_SEX, DRIVER_AGE, DRIVER_NUMBER, TEL_NUMBER, DRIVER_ADDRESS, DRIVING_TYPE, STATE, COMMENT_INFO
+        from carm.t_driverinfo
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultType="work.aijiu.entity.Driver">
+        select * from t_driverinfo
+        where
+        1 = 1
+        <if test="driverName !='' ">
+            and DRIVER_NAME like CONCAT('%',#{driverName},'%')
+        </if>
+        <if test="driverSex !='' ">
+            and DRIVER_SEX = #{driverSex}
+        </if>
+        <if test="drivinglicenseNumber !='' ">
+            and DRIVINGLICENSE_NUMBER = #{drivinglicenseNumber}
+        </if>
+        <if test="state !='' ">
+            and STATE = #{state}
+        </if>
+        <if test="drivingType !='' ">
+            and DRIVING_TYPE = #{drivingType}
+        </if>
+        <if test="telNumber !='' ">
+            and TEL_NUMBER like CONCAT('%', #{telNumber},'%')
+        </if>
+        limit  #{page} , #{limit}
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" parameterType="String">
+        insert into carm.t_driverinfo(DRIVINGLICENSE_NUMBER, DRIVER_NAME, DRIVER_SEX, DRIVER_AGE, DRIVER_NUMBER, TEL_NUMBER, DRIVER_ADDRESS, DRIVING_TYPE, STATE, COMMENT_INFO)
+        values (#{drivinglicenseNumber}, #{driverName}, #{driverSex}, #{driverAge}, #{driverNumber}, #{telNumber}, #{driverAddress}, #{drivingType}, #{state}, #{commentInfo})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update carm.t_driverinfo
+        <set>
+            <if test="drivinglicenseNumber != null and drivinglicenseNumber != ''">
+                DRIVINGLICENSE_NUMBER = #{drivinglicenseNumber},
+            </if>
+            <if test="driverName != null and driverName != ''">
+                DRIVER_NAME = #{driverName},
+            </if>
+            <if test="driverSex != null and driverSex != ''">
+                DRIVER_SEX = #{driverSex},
+            </if>
+            <if test="driverAge != null and driverAge != ''">
+                DRIVER_AGE = #{driverAge},
+            </if>
+            <if test="driverNumber != null and driverNumber != ''">
+                DRIVER_NUMBER = #{driverNumber},
+            </if>
+            <if test="telNumber != null and telNumber != ''">
+                TEL_NUMBER = #{telNumber},
+            </if>
+            <if test="driverAddress != null and driverAddress != ''">
+                DRIVER_ADDRESS = #{driverAddress},
+            </if>
+            <if test="drivingType != null and drivingType != ''">
+                DRIVING_TYPE = #{drivingType},
+            </if>
+            <if test="state != null and state != ''">
+                STATE = #{state},
+            </if>
+            <if test="commentInfo != null and commentInfo != ''">
+                COMMENT_INFO = #{commentInfo},
+            </if>
+        </set>
+        where DRIVERINFO_ID = #{driverinfoId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from carm.t_driverinfo where DRIVERINFO_ID = #{driverinfoId}
+    </delete>
+
+</mapper>

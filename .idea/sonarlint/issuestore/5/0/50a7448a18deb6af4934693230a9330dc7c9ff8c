@@ -1,0 +1,11 @@
+
+k
+java:S1858"K"getCronExpression" returns a string, there's no need to call "toString()".(ğÈáÿûÿÿÿÿ8ğò¨ëÃ.
+‘
+java:S1130"vRemove the declaration of thrown exception 'org.quartz.SchedulerException', as it cannot be thrown from method's body.(È÷‚ì8¡¿µËÃ.
+N
+java:S1905".Remove this unnecessary cast to "CronTrigger".(éÙ²âøÿÿÿÿ8«Á²ËÃ.
+V
+java:S1128";Remove this unused import 'work.aijiu.service.UserService'.(¡¤øö8ş‹„ËÃ.
+Q
+java:S1128"7Remove this unused import 'work.aijiu.dao.ApproverDao'.(ÅÖ8õ›’ËÃ.

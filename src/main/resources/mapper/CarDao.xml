@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="work.aijiu.dao.CarDao">
+    <insert id="insCar" parameterType="String">
+        insert into t_carinfo
+        (PLATE_NUMBER,VEHICLE_CLASSNAME,FRAME_NUMBER,FACTORY_NUMBER,BRAND_MODEL,REG_TIME,EXAMINATION_TIME,RATED_PASSENGERS,STATE,COMMENT_INFO)
+        values(
+        #{plateNumber}, #{vehicleClassname}, #{frameNumber}, #{factoryNumber}, #{brandModel},
+         #{regTime}, #{examinationTime}, #{ratedPassengers}, #{state}, #{commentInfo}
+        )
+    </insert>
+    <update id="updateCar" parameterType="String">
+        update t_carinfo set
+        PLATE_NUMBER = #{plateNumber},
+        VEHICLE_CLASSNAME = #{vehicleClassname},
+        FRAME_NUMBER = #{frameNumber},
+        FACTORY_NUMBER = #{factoryNumber},
+        BRAND_MODEL = #{brandModel},
+        REG_TIME = #{regTime},
+        EXAMINATION_TIME = #{examinationTime},
+        RATED_PASSENGERS = #{ratedPassengers},
+        STATE = #{state},
+        COMMENT_INFO = #{commentInfo}
+        where CARINFO_ID = #{carinfoId}
+    </update>
+    <delete id="delCar" parameterType="String">
+        delete from t_carinfo where CARINFO_ID = #{carinfoId}
+    </delete>
+    <select id="searchCar" resultType="work.aijiu.entity.Carinfo">
+    select t.VEHICLE_CLASSNAME,c.* from t_carinfo c, t_cartype t
+        where
+            c.VEHICLE_CLASSNAME = t.CARTYPE_ID and
+            1 = 1
+            <if test="plateNumber !='' ">
+                and c.PLATE_NUMBER like CONCAT('%',#{plateNumber},'%')
+            </if>
+            <if test="vehicleClassname !='' ">
+                and c.VEHICLE_CLASSNAME = #{vehicleClassname}
+            </if>
+            <if test="brandModel !='' ">
+                and c.BRAND_MODEL like CONCAT('%',#{brandModel},'%')
+            </if>
+            <if test="state !='' ">
+                and c.STATE = #{state}
+            </if>
+            <if test="regTime !=''">
+                and c.REG_TIME BETWEEN #{regbeg} and #{regend}
+            </if>
+            <if test="examinationTime !=''">
+                and c.EXAMINATION_TIME BETWEEN  #{exbeg} and #{exend}
+            </if>
+            limit  #{page} , #{limit}
+    </select>
+    <update id="updateStateByNum">
+        update t_carinfo  set
+        STATE = #{state}
+        where
+        PLATE_NUMBER = #{plateNumber}
+    </update>
+
+    <select id="selectDate" resultType="java.util.Map">
+        select t.VEHICLE_CLASSNAME name,count(c.PLATE_NUMBER) number
+        from t_carinfo c,t_cartype t
+        where c.VEHICLE_CLASSNAME = t.CARTYPE_ID GROUP BY t.VEHICLE_CLASSNAME
+    </select>
+
+    <select id="getCarStateDate" resultType="java.util.Map">
+       select c.STATE state , count(c.STATE) number from t_carinfo c GROUP BY c.STATE
+    </select>
+
+    <select id="getConsumption" resultType="java.util.Map">
+        select c.PLATE_NUMBER name,l.consume/(d.kmAfter -d.kmBefore) value
+        from t_carinfo c,  t_dispatch d, t_cardlog l
+        where c.PLATE_NUMBER = d.car_Number and c.PLATE_NUMBER = l.carNumber and d.car_Number = l.carNumber
+    </select>
+    <update id="repairCar">
+        update t_carinfo set
+        STATE = '1'
+        where CARINFO_ID = #{carinfoId}
+    </update>
+</mapper>
